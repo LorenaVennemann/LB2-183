@@ -1,4 +1,6 @@
 function getHtml(req) {
+    const sanitizedUserId = encodeURIComponent(req.cookies.userid || '');
+
     return `
 <section id="search">
     <h2>Search</h2>
@@ -29,9 +31,9 @@ function getHtml(req) {
                 title: 'Please enter search terms.',
             },
             submitHandler: function (form) {
-                provider = $("#searchurl").val();
-                terms = $("#terms").val();
-                userid = `+req.cookies.userid+`;
+                const provider = $("#searchurl").val();
+                const terms = $("#terms").val();
+                const userid = "${sanitizedUserId}";
                 $("#msg").show();
                 $("#result").html("");
                 $.post("search", { provider: provider, terms: terms, userid: userid }, function(data){
