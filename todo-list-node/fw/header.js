@@ -18,13 +18,13 @@ async function getHtml(req) {
 
     let id = 0;
     let roleid = 0;
-    if(req.cookies.userid !== undefined && req.cookies.userid !== '') {
+    if (req.cookies.userid !== undefined && req.cookies.userid !== '') {
         id = req.cookies.userid;
-        let stmt = await db.executeStatement("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = "+id);
+        let stmt = await db.executeStatement("SELECT users.id userid, roles.id roleid, roles.title rolename FROM users INNER JOIN permissions ON users.id = permissions.userid INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?", [id]);
         console.log(stmt);
 
         // load role from db
-        if(stmt.length > 0) {
+        if (stmt.length > 0) {
             roleid = stmt[0].roleid;
         }
 
@@ -32,7 +32,7 @@ async function getHtml(req) {
         <nav>
             <ul>
                 <li><a href="/">Tasks</a></li>`;
-        if(roleid === 1) {
+        if (roleid === 1) {
             content += `
                 <li><a href="/admin/users">User List</a></li>`;
         }
