@@ -9,13 +9,25 @@ async function connectDB() {
         return connection;
     } catch (error) {
         console.error('Error connecting to database:', error);
+        throw error;
     }
 }
 
-async function executeStatement(statement) {
-    let conn = await connectDB();
-    const [results, fields] = await conn.query(statement);
-    return results;
+// Ausführung eines vorbereiteten Statements
+async function executeStatement(statement, params) {
+    let conn;
+    try {
+        conn = await connectDB();
+        const [results, fields] = await conn.execute(statement, params);
+        return results;
+    } catch (error) {
+        console.error('Error executing statement:', error);
+        throw error;
+    } finally {
+        if (conn) {
+            await conn.end();
+        }
+    }
 }
 
 module.exports = { connectDB: connectDB, executeStatement: executeStatement };
