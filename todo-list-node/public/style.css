@@ -1,52 +1,53 @@
-body{
-    margin:0;
-    margin-bottom:40px;
+body {
+    margin: 0;
+    margin-bottom: 40px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 16px;
     background-color: white;
 }
 
-header{
+header {
     height: 80px;
     width: 100%;
     background-color: #00a0e5;
     position: relative;
 }
 
-header > nav{
+header>nav {
     position: absolute;
     right: 20px;
     bottom: 10px;
 }
-header > nav ul{
+
+header>nav ul {
     list-style: none;
 }
-header > nav ul li{
+
+header>nav ul li {
     list-style: none;
     float: left;
     font-size: 16px;
     height: 30px;
     display: block;
 }
-header > nav ul li:hover{
-    /* tbd */
-}
-header > nav a,
-header > nav a:visited,
-header > nav a:active{
+
+header>nav a,
+header>nav a:visited,
+header>nav a:active {
     color: white;
     text-decoration: none;
     display: block;
     padding: 5px 10px
 }
-header > nav a:hover{
+
+header>nav a:hover {
     color: white;
     text-decoration: underline;
     width: 100%;
     height: 100%;
 }
 
-header > div{
+header>div {
     padding: 20px;
     width: 50%;
     margin: 0 auto;
@@ -55,96 +56,108 @@ header > div{
     font-weight: bold;
 }
 
-footer{
+footer {
     background-color: #00a0e5;
     position: absolute;
-    bottom:0;
+    bottom: 0;
     left: 0;
-    height:30px;
+    height: 30px;
     width: 100%;
     text-align: right;
     margin-right: 100px;
-    padding-top:10px;
+    padding-top: 10px;
     font-size: 12px;
 }
 
-main{
+main {
     max-width: 1024px;
     margin: 0 auto;
-    padding-top:20px;
+    padding-top: 20px;
 }
 
-table{
+table {
     margin: 20px 0 0 0;
     border-collapse: collapse;
 }
-table th, table td{
+
+table th,
+table td {
     padding: 5px 10px;
     text-align: left;
 }
-table th{
+
+table th {
     border-bottom: 1px solid black;
 }
-table td.wide{
+
+table td.wide {
     min-width: 200px;
 }
 
-.form-group{
+.form-group {
     clear: both;
 }
-.form-group label{
+
+.form-group label {
     display: block;
     width: 150px;
-    float:left;
+    float: left;
     height: 30px;
     margin: 10px 0 0 0;
 }
+
 .form-group input,
 .form-group select,
-.form-group option{
+.form-group option {
     float: left;
     height: 30px;
-    margin:0;
-    padding:0 5px;
+    margin: 0;
+    padding: 0 5px;
     line-height: 10px;
     font-size: 16px;
 }
 
 .form-group input.size-auto,
-.form-group select.auto-medium{
+.form-group select.auto-medium {
     min-width: 100px;
 }
 
 .form-group input.size-medium,
-.form-group select.size-medium{
+.form-group select.size-medium {
     min-width: 400px;
 }
 
-span.info{
+span.info {
     margin: 0 auto;
     width: 200px;
     text-align: center;
-    display:block;
-    padding:20px;
+    display: block;
+    padding: 20px;
 }
-span.info-success{
+
+span.info-success {
     background-color: #98E0AD;
 }
-span.info-error{
+
+span.info-error {
     background-color: #F8A1A4;
 }
-hr{
-    margin:25px 0 0 0;
-    padding:0;
-    border:0;
-    border-bottom:1px solid black;
+
+hr {
+    margin: 25px 0 0 0;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid black;
 }
-.hidden{
-    display:none;
+
+.hidden {
+    display: none;
 }
-#messages{
-    clear:both;
+
+#messages {
+    clear: both;
 }
-#msg{
+
+#msg {
     font-weight: bold;
 }
