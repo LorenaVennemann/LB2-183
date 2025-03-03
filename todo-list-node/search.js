@@ -2,7 +2,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 
 async function getHtml(req) {
-    if (req.body.provider === undefined || req.body.terms === undefined || req.body.userid === undefined){
+    if (req.body.provider === undefined || req.body.terms === undefined || req.body.userid === undefined) {
         return "Not enough information provided";
     }
 
@@ -10,18 +10,16 @@ async function getHtml(req) {
     let terms = req.body.terms;
     let userid = req.body.userid;
 
-    await sleep(1000); // this is a long, long search!!
-
-    let theUrl='http://localhost:3000'+provider+'?userid='+userid+'&terms='+terms;
+    let theUrl = 'http://localhost:3000' + provider + '?userid=' + userid + '&terms=' + terms;
     let result = await callAPI('GET', theUrl, false);
     return result;
 }
 
-async function callAPI(method, url, data){
+async function callAPI(method, url, data) {
     let noResults = 'No results found!';
     let result;
 
-    switch (method){
+    switch (method) {
         case "POST":
             if (data) {
                 result = await axios.post(url, data)
@@ -62,7 +60,7 @@ async function callAPI(method, url, data){
             break;
         default:
             if (data)
-                url = url+'?'+querystring.stringify(data);
+                url = url + '?' + querystring.stringify(data);
 
             result = await axios.get(url)
                 .then(response => {
