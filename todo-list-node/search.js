@@ -2,15 +2,15 @@ const axios = require('axios');
 const querystring = require('querystring');
 
 async function getHtml(req) {
-    if (req.body.provider === undefined || req.body.terms === undefined || req.body.userid === undefined) {
+    if (!req.body.provider || !req.body.terms || !req.body.userid) {
         return "Not enough information provided";
     }
 
-    let provider = req.body.provider;
-    let terms = req.body.terms;
-    let userid = req.body.userid;
+    let provider = sanitize(req.body.provider);
+    let terms = sanitize(req.body.terms);
+    let userid = sanitize(req.body.userid);
 
-    let theUrl = 'http://localhost:3000' + provider + '?userid=' + userid + '&terms=' + terms;
+    let theUrl = `http://localhost:3000${provider}?userid=${userid}&terms=${terms}`;
     let result = await callAPI('GET', theUrl, false);
     return result;
 }
@@ -19,65 +19,29 @@ async function callAPI(method, url, data) {
     let noResults = 'No results found!';
     let result;
 
-    switch (method) {
-        case "POST":
-            if (data) {
-                result = await axios.post(url, data)
-                    .then(response => {
-                        return response.data;
-                    })
-                    .catch(error => {
-                        return noResults;
-                    });
-            } else {
-                result = await axios.post(url)
-                    .then(response => {
-                        return response.data;
-                    })
-                    .catch(error => {
-                        return noResults;
-                    });
-            }
-            break;
-        case "PUT":
-            if (data) {
-                result = await axios.put(url, data)
-                    .then(response => {
-                        return response.data;
-                    })
-                    .catch(error => {
-                        return noResults;
-                    });
-            } else {
-                result = await axios.put(url)
-                    .then(response => {
-                        return response.data;
-                    })
-                    .catch(error => {
-                        return noResults;
-                    });
-            }
-            break;
-        default:
-            if (data)
-                url = url + '?' + querystring.stringify(data);
-
-            result = await axios.get(url)
-                .then(response => {
-                    return response.data;
-                })
-                .catch(error => {
-                    return noResults;
-                });
+    try {
+        switch (method) {
+            case "POST":
+                result = await axios.post(url, data);
+                break;
+            case "PUT":
+                result = await axios.put(url, data);
+                break;
+            default:
+                if (data) {
+                    url = `${url}?${querystring.stringify(data)}`;
+                }
+                result = await axios.get(url);
+        }
+        return result.data;
+    } catch (error) {
+        console.error('Error calling API:', error);
+        return noResults;
     }
-
-    return result ? result : noResults;
 }
 
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
+function sanitize(input) {
+    return input.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 module.exports = { html: getHtml };
