@@ -4,11 +4,11 @@ async function handleLogin(req, res) {
     let msg = '';
     let user = { 'username': '', 'userid': 0 };
 
-    if(typeof req.query.username !== 'undefined' && typeof req.query.password !== 'undefined') {
+    if (typeof req.query.username !== 'undefined' && typeof req.query.password !== 'undefined') {
         // Get username and password from the form and call the validateLogin
         let result = await validateLogin(req.query.username, req.query.password);
 
-        if(result.valid) {
+        if (result.valid) {
             // Login is correct. Store user information to be returned.
             user.username = req.query.username;
             user.userid = result.userId;
@@ -22,23 +22,23 @@ async function handleLogin(req, res) {
 }
 
 function startUserSession(res, user) {
-    console.log('login valid... start user session now for userid '+user.userid);
+    console.log('login valid... start user session now for userid ' + user.userid);
     res.cookie('username', user.username);
     res.cookie('userid', user.userid);
     res.redirect('/');
 }
 
-async function validateLogin (username, password) {
+async function validateLogin(username, password) {
     let result = { valid: false, msg: '', userId: 0 };
 
     // Connect to the database
     const dbConnection = await db.connectDB();
 
-    const sql = `SELECT id, username, password FROM users WHERE username='`+username+`'`;
+    const sql = `SELECT id, username, password FROM users WHERE username = ?`;
     try {
-        const [results, fields] = await dbConnection.query(sql);
+        const [results, fields] = await dbConnection.execute(sql, [username]);
 
-        if(results.length > 0) {
+        if (results.length > 0) {
             // Bind the result variables
             let db_id = results[0].id;
             let db_username = results[0].username;
@@ -63,7 +63,7 @@ async function validateLogin (username, password) {
     } catch (err) {
         console.log(err);
     }
-    
+
     return result;
 }
 

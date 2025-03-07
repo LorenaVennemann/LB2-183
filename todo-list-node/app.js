@@ -19,7 +19,8 @@ const PORT = 3000;
 app.use(session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { httpOnly: true, secure: true }
 }));
 
 // Middleware für Body-Parser
@@ -49,7 +50,7 @@ app.post('/', async (req, res) => {
 
 // edit task
 app.get('/admin/users', async (req, res) => {
-    if(activeUserSession(req)) {
+    if (activeUserSession(req)) {
         let html = await wrapContent(await adminUser.html, req);
         res.send(html);
     } else {
@@ -71,7 +72,7 @@ app.get('/edit', async (req, res) => {
 app.get('/login', async (req, res) => {
     let content = await login.handleLogin(req, res);
 
-    if(content.user.userid !== 0) {
+    if (content.user.userid !== 0) {
         // login was successful... set cookies and redirect to /
         login.startUserSession(res, content.user);
     } else {
@@ -84,8 +85,8 @@ app.get('/login', async (req, res) => {
 // Logout
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.cookie('username','');
-    res.cookie('userid','');
+    res.cookie('username', '');
+    res.cookie('userid', '');
     res.redirect('/login');
 });
 
@@ -128,7 +129,7 @@ app.listen(PORT, () => {
 
 async function wrapContent(content, req) {
     let headerHtml = await header(req);
-    return headerHtml+content+footer;
+    return headerHtml + content + footer;
 }
 
 function activeUserSession(req) {
