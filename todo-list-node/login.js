@@ -1,20 +1,24 @@
-const db = require('./fw/db');
+const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
+const { initializeApp } = require('firebase/app');
+const firebaseConfig = require('./firebaseConfig');
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 async function handleLogin(req, res) {
     let msg = '';
     let user = { 'username': '', 'userid': 0 };
 
-    if (typeof req.query.username !== 'undefined' && typeof req.query.password !== 'undefined') {
-        // Get username and password from the form and call the validateLogin
-        let result = await validateLogin(req.query.username, req.query.password);
-
-        if (result.valid) {
-            // Login is correct. Store user information to be returned.
-            user.username = req.query.username;
-            user.userid = result.userId;
-            msg = result.msg;
-        } else {
-            msg = result.msg;
+    if (typeof req.body.email !== 'undefined' && typeof req.body.password !== 'undefined') {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, req.body.email, req.body.password);
+            user.username = userCredential.user.email;
+            user.userid = userCredential.user.uid;
+            const idToken = await userCredential.user.getIdToken();
+            res.cookie('idToken', idToken, { httpOnly: true, secure: false }); // In production, set secure: true
+            msg = 'Login successful';
+        } catch (error) {
+            msg = `Login failed: ${error.message}`;
         }
     }
 
@@ -28,57 +32,17 @@ function startUserSession(res, user) {
     res.redirect('/');
 }
 
-async function validateLogin(username, password) {
-    let result = { valid: false, msg: '', userId: 0 };
-
-    // Connect to the database
-    const dbConnection = await db.connectDB();
-
-    const sql = `SELECT id, username, password FROM users WHERE username = ?`;
-    try {
-        const [results, fields] = await dbConnection.execute(sql, [username]);
-
-        if (results.length > 0) {
-            // Bind the result variables
-            let db_id = results[0].id;
-            let db_username = results[0].username;
-            let db_password = results[0].password;
-
-            // Verify the password
-            if (password == db_password) {
-                result.userId = db_id;
-                result.valid = true;
-                result.msg = 'login correct';
-            } else {
-                // Password is incorrect
-                result.msg = 'Incorrect password';
-            }
-        } else {
-            // Username does not exist
-            result.msg = 'Username does not exist';
-        }
-
-        console.log(results); // results contains rows returned by server
-        //console.log(fields); // fields contains extra meta data about results, if available
-    } catch (err) {
-        console.log(err);
-    }
-
-    return result;
-}
-
 function getHtml() {
     return `
     <h2>Login</h2>
-
-    <form id="form" method="get" action="/login">
+    <form id="form" method="post" action="/login">
         <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control size-medium" name="username" id="username">
+            <label for="email">Email</label>
+            <input type="email" class="form-control size-medium" name="email" id="email" required>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="text" class="form-control size-medium" name="password" id="password">
+            <input type="password" class="form-control size-medium" name="password" id="password" required>
         </div>
         <div class="form-group">
             <label for="submit" ></label>
