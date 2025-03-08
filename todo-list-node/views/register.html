@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrierung</title>
+    <!-- Firebase SDK als Module laden -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAeP-mvD5dW9Q_aU_lm6EmXGPYzAFNQHLY",
+            authDomain: "login-183.firebaseapp.com",
+            projectId: "login-183",
+            storageBucket: "login-183.firebasestorage.app",
+            messagingSenderId: "449021965144",
+            appId: "1:449021965144:web:7106fa2e8f3df85976eb2d"
+        };
+
+        // Firebase initialisieren
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Google Auth Handler
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const token = await result.user.getIdToken();
+
+                const response = await fetch('/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token })
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message);
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = error.message;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h2>Registrierung</h2>
+    <form id="form">
+        <div class="form-group">
+            <label for="email">E-Mail</label>
+            <input type="email" class="form-control size-medium" name="email" id="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" class="form-control size-medium" name="password" id="password">
+        </div>
+        <div class="form-group">
+            <button id="submit" type="submit" class="btn size-auto">Registrieren</button>
+        </div>
+        <button id="googleSignIn" type="button" class="btn google-btn">
+            Mit Google registrieren
+        </button>
+        <div id="error-message" style="color: red;"></div>
+    </form>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Verhindert das Standard-Formular-Submit
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+
+            // Einfache Validierung
+            if (!email || !password) {
+                errorDiv.textContent = 'Bitte E-Mail und Passwort eingeben';
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login'; // Weiterleitung zum Login bei Erfolg
+                } else {
+                    const data = await response.text();
+                    errorDiv.innerHTML = data; // Zeigt die Fehlermeldung vom Server an
+                }
+            } catch (error) {
+                errorDiv.textContent = `Fehler: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>

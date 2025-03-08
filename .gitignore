@@ -1,2 +1,4 @@
 /todo-list-node/node_modules/
 .idea
+todo-list-node/.env
+todo-list-node/login-183-firebase-adminsdk-fbsvc-6ca3379310.json

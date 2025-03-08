@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -11,6 +13,8 @@ const editTask = require('./edit');
 const saveTask = require('./savetask');
 const search = require('./search');
 const searchProvider = require('./search/v2/index');
+const register = require('./register');
+const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
@@ -20,14 +24,23 @@ app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
-    cookie: { httpOnly: true, secure: true }
+    cookie: { httpOnly: true, secure: false } // in production secure: true
 }));
 
 // Middleware für Body-Parser
+app.use(cors({
+    origin: 'http://localhost', // Ohne Port wenn auf 80 gemapped
+    methods: ['POST', 'GET'],
+    allowedHeaders: ['Content-Type']
+}));
+
+app.use(express.static('views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+
+app.use('/auth', register);
 
 // Routen
 app.get('/', async (req, res) => {

@@ -9,7 +9,7 @@ async function connectDB() {
         return connection;
     } catch (error) {
         console.error('Error connecting to database:', error);
-        throw new Error('Database connection failed');
+        throw error;
     }
 }
 
@@ -22,7 +22,7 @@ async function executeStatement(statement, params) {
         return results;
     } catch (error) {
         console.error('Error executing statement:', error);
-        throw new Error('Error executing statement');
+        throw error;
     } finally {
         if (conn) {
             await conn.end();
