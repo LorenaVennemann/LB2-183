@@ -1,27 +1,37 @@
-const db = require('./fw/db');
+const { getFirestore } = require('firebase-admin/firestore');
+const db = getFirestore();
 
 async function getHtml(req) {
     let html = '';
     let taskId = '';
 
-    // see if the id exists in the database
     if (req.body.id !== undefined && req.body.id.length !== 0) {
         taskId = req.body.id;
-        let stmt = await db.executeStatement('SELECT ID, title, state FROM tasks WHERE ID = ?', [taskId]);
-        if (stmt.length === 0) {
+        const taskDocRef = db.collection('tasks').doc(taskId);
+        const taskDoc = await taskDocRef.get();
+        if (!taskDoc.exists) {
             taskId = '';
         }
     }
 
     if (req.body.title !== undefined && req.body.state !== undefined) {
-        let state = req.body.state;
-        let title = req.body.title;
-        let userid = req.cookies.userid;
+        const state = req.body.state;
+        const title = req.body.title;
+        const userId = req.user.uid;
 
         if (taskId === '') {
-            await db.executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [title, state, userid]);
+            const newTaskRef = db.collection('tasks').doc();
+            await newTaskRef.set({
+                userId: userId,
+                title: title,
+                state: state
+            });
         } else {
-            await db.executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [title, state, taskId]);
+            const taskDocRef = db.collection('tasks').doc(taskId);
+            await taskDocRef.update({
+                title: title,
+                state: state
+            });
         }
 
         html += "<span class='info info-success'>Update successful</span>";
@@ -32,4 +42,4 @@ async function getHtml(req) {
     return html;
 }
 
-module.exports = { html: getHtml }
+module.exports = { html: getHtml };

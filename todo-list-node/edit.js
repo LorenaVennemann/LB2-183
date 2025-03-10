@@ -1,5 +1,7 @@
-const db = require('./fw/db');
+const { getFirestore } = require('firebase-admin/firestore');
 const escapeHtml = require('escape-html');
+
+const db = getFirestore();
 
 async function getHtml(req) {
     let title = '';
@@ -13,11 +15,12 @@ async function getHtml(req) {
         console.log(req.query);
         console.log(req.query.id);
         taskId = req.query.id;
-        let conn = await db.connectDB();
-        let [result, fields] = await conn.query('SELECT ID, title, state FROM tasks WHERE ID = ?', [taskId]);
-        if (result.length > 0) {
-            title = result[0].title;
-            state = result[0].state;
+        const taskDocRef = db.collection('tasks').doc(taskId);
+        const taskDoc = await taskDocRef.get();
+        if (taskDoc.exists) {
+            const taskData = taskDoc.data();
+            title = taskData.title;
+            state = taskData.state;
         }
 
         html += `<h1>Edit Task</h1>`;

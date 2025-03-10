@@ -14,6 +14,7 @@ const saveTask = require('./savetask');
 const search = require('./search');
 const searchProvider = require('./search/v2/index');
 const register = require('./register');
+const auth = require('./auth');
 const cors = require('cors');
 
 const app = express();
@@ -42,9 +43,24 @@ app.use(cookieParser());
 
 app.use('/auth', register);
 
+// Middleware zur Überprüfung der Authentifizierung
+app.use(async (req, res, next) => {
+    const idToken = req.cookies.idToken;
+    if (idToken) {
+        try {
+            const decodedToken = await auth.verifyToken(idToken);
+            req.user = decodedToken;
+            req.user.uid = decodedToken.uid;
+        } catch (error) {
+            console.error('Error verifying token:', error);
+        }
+    }
+    next();
+});
+
 // Routen
 app.get('/', async (req, res) => {
-    if (activeUserSession(req)) {
+    if (req.user) {
         let html = await wrapContent(await index.html(req), req)
         res.send(html);
     } else {
@@ -52,18 +68,15 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.post('/', async (req, res) => {
-    if (activeUserSession(req)) {
-        let html = await wrapContent(await index.html(req), req)
-        res.send(html);
-    } else {
-        res.redirect('login');
-    }
-})
+app.post('/login', async (req, res) => {
+    let content = await login.handleLogin(req, res);
+    let html = await wrapContent(content.html, req);
+    res.redirect('/');
+});
 
 // edit task
 app.get('/admin/users', async (req, res) => {
-    if (activeUserSession(req)) {
+    if (req.user) {
         let html = await wrapContent(await adminUser.html, req);
         res.send(html);
     } else {
@@ -73,7 +86,7 @@ app.get('/admin/users', async (req, res) => {
 
 // edit task
 app.get('/edit', async (req, res) => {
-    if (activeUserSession(req)) {
+    if (req.user) {
         let html = await wrapContent(await editTask.html(req), req);
         res.send(html);
     } else {
@@ -100,13 +113,15 @@ app.get('/logout', (req, res) => {
     req.session.destroy();
     res.cookie('username', '');
     res.cookie('userid', '');
+    res.cookie('idToken', '');
     res.redirect('/login');
 });
 
 // Profilseite anzeigen
-app.get('/profile', (req, res) => {
-    if (req.session.loggedin) {
-        res.send(`Welcome, ${req.session.username}! <a href="/logout">Logout</a>`);
+app.get('/profile', async (req, res) => {
+    if (req.user) {
+        const userRecord = await auth.getUser(req.user.uid);
+        res.send(`Welcome, ${userRecord.displayName || userRecord.email}! <a href="/logout">Logout</a>`);
     } else {
         res.send('Please login to view this page');
     }
@@ -114,7 +129,7 @@ app.get('/profile', (req, res) => {
 
 // save task
 app.post('/savetask', async (req, res) => {
-    if (activeUserSession(req)) {
+    if (req.user) {
         let html = await wrapContent(await saveTask.html(req), req);
         res.send(html);
     } else {
@@ -134,7 +149,6 @@ app.get('/search/v2/', async (req, res) => {
     res.send(result);
 });
 
-
 // Server starten
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
@@ -143,11 +157,4 @@ app.listen(PORT, () => {
 async function wrapContent(content, req) {
     let headerHtml = await header(req);
     return headerHtml + content + footer;
-}
-
-function activeUserSession(req) {
-    // check if cookie with user information ist set
-    console.log('in activeUserSession');
-    console.log(req.cookies);
-    return req.cookies !== undefined && req.cookies.username !== undefined && req.cookies.username !== '';
 }

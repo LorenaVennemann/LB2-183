@@ -2,15 +2,19 @@ const axios = require('axios');
 const querystring = require('querystring');
 
 async function getHtml(req) {
-    if (!req.body.provider || !req.body.terms || !req.body.userid) {
+    console.log('Received request body:', req.body);
+
+    if (!req.body.terms || !req.user || !req.user.uid) {
         return "Not enough information provided";
     }
 
-    let provider = sanitize(req.body.provider);
     let terms = sanitize(req.body.terms);
-    let userid = sanitize(req.body.userid);
+    let userid = sanitize(req.user.uid);
 
-    let theUrl = `http://localhost:3000${provider}?userid=${userid}&terms=${terms}`;
+    console.log('Terms:', terms);
+    console.log('UserID:', userid);
+
+    let theUrl = `http://localhost:3000/search/v2/?userid=${userid}&terms=${terms}`;
     let result = await callAPI('GET', theUrl, false);
     return result;
 }

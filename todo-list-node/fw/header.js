@@ -1,5 +1,14 @@
-const login = require('../login');
-const db = require('../fw/db');
+const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
+const serviceAccount = require('../login-183-firebase-adminsdk-fbsvc-6ca3379310.json');
+
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+}
+
+const db = getFirestore();
 
 async function getHtml(req) {
     let content = `<!DOCTYPE html>
@@ -16,30 +25,28 @@ async function getHtml(req) {
     <header>
         <div>This is the insecure m183 test app</div>`;
 
-    let id = 0;
-    let roleid = 0;
-    if (req.cookies.userid !== undefined && req.cookies.userid !== '') {
-        id = req.cookies.userid;
-        let stmt = await db.executeStatement("SELECT users.id userid, roles.id roleid, roles.title rolename FROM users INNER JOIN permissions ON users.id = permissions.userid INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?", [id]);
-        console.log(stmt);
+    if (req.user && req.user.uid) {
+        const userDocRef = db.collection('users').doc(req.user.uid);
+        const userDoc = await userDocRef.get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            console.log("userData: " + JSON.stringify(userData));
+            const isAdmin = userData.isAdmin;
+            console.log("isAdmin: " + isAdmin);
 
-        // load role from db
-        if (stmt.length > 0) {
-            roleid = stmt[0].roleid;
-        }
-
-        content += `
-        <nav>
-            <ul>
-                <li><a href="/">Tasks</a></li>`;
-        if (roleid === 1) {
             content += `
-                <li><a href="/admin/users">User List</a></li>`;
+            <nav>
+                <ul>
+                    <li><a href="/">Tasks</a></li>`;
+            if (isAdmin) {
+                content += `
+                    <li><a href="/admin/users">User List</a></li>`;
+            }
+            content += `
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>`;
         }
-        content += `
-                <li><a href="/logout">Logout</a></li>
-            </ul>
-        </nav>`;
     }
 
     content += `

@@ -1,4 +1,5 @@
-const db = require('../fw/db');
+const { getFirestore } = require('firebase-admin/firestore');
+const db = getFirestore();
 
 async function getHtml(req) {
     let html = `
@@ -13,25 +14,22 @@ async function getHtml(req) {
             </tr>
     `;
     try {
-        let conn = await db.connectDB();
-        let [rows] = await conn.query('SELECT ID, title, state FROM tasks WHERE UserID = ?', [req.cookies.userid]);
-
-        console.log("result: ", rows);
-
-        if (Array.isArray(rows) && rows.length > 0) {
-            rows.forEach(function (row) {
+        const tasksSnapshot = await db.collection('tasks').where('userId', '==', req.user.uid).get();
+        if (tasksSnapshot.empty) {
+            html += `<tr><td colspan="4">No tasks found</td></tr>`;
+        } else {
+            tasksSnapshot.forEach(doc => {
+                const task = doc.data();
                 html += `
                     <tr>
-                        <td>${sanitize(row.ID)}</td>
-                        <td class="wide">${sanitize(row.title)}</td>
-                        <td>${sanitize(ucfirst(row.state))}</td>
+                        <td>${sanitize(doc.id)}</td>
+                        <td class="wide">${sanitize(task.title)}</td>
+                        <td>${sanitize(ucfirst(task.state))}</td>
                         <td>
-                            <a href="edit?id=${sanitize(row.ID)}">edit</a> | <a href="delete?id=${sanitize(row.ID)}">delete</a>
+                            <a href="edit?id=${sanitize(doc.id)}">edit</a> | <a href="delete?id=${sanitize(doc.id)}">delete</a>
                         </td>
                     </tr>`;
             });
-        } else {
-            html += `<tr><td colspan="4">No tasks found</td></tr>`;
         }
     } catch (error) {
         console.error('Error executing query:', error);
@@ -55,4 +53,4 @@ function sanitize(input) {
 
 module.exports = {
     html: getHtml
-}
+};
