@@ -10,23 +10,34 @@ const login = require('./login');
 const index = require('./index');
 const adminUser = require('./admin/users');
 const editTask = require('./edit');
+const { deleteTask } = require('./deletetask');
+const tasklist = require('./user/tasklist');
 const saveTask = require('./savetask');
 const search = require('./search');
 const searchProvider = require('./search/v2/index');
 const register = require('./register');
 const auth = require('./auth');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = 3000;
+
+app.use(express.static('public'));
 
 // Middleware für Session-Handling
 app.use(session({
     secret: 'secret',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
-    cookie: { httpOnly: true, secure: false } // in production secure: true
+    cookie: { secure: false } // in production secure: true
 }));
+
+function activeUserSession(req) {
+    return req.session && req.session.userid;
+}
 
 // Middleware für Body-Parser
 app.use(cors({
@@ -58,6 +69,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
+
 // Routen
 app.get('/', async (req, res) => {
     if (req.user) {
@@ -84,6 +96,7 @@ app.get('/admin/users', async (req, res) => {
     }
 });
 
+
 // edit task
 app.get('/edit', async (req, res) => {
     if (req.user) {
@@ -93,6 +106,7 @@ app.get('/edit', async (req, res) => {
         res.redirect('/');
     }
 });
+
 
 // Login-Seite anzeigen
 app.get('/login', async (req, res) => {
@@ -105,6 +119,21 @@ app.get('/login', async (req, res) => {
         // login unsuccessful or not made jet... display login form
         let html = await wrapContent(content.html, req);
         res.send(html);
+    }
+});
+
+
+app.get('/delete', deleteTask);
+
+// delete task
+app.post('/delete', async (req, res) => {
+    console.log('Session:', req.session); // Debugging-Ausgabe
+    if (activeUserSession(req)) {
+        console.log('User session is active'); // Debugging-Ausgabe
+        await deleteTask(req, res);
+    } else {
+        console.log('User session is not active'); // Debugging-Ausgabe
+        res.redirect('/');
     }
 });
 
@@ -158,3 +187,4 @@ async function wrapContent(content, req) {
     let headerHtml = await header(req);
     return headerHtml + content + footer;
 }
+
