@@ -1,9 +1,9 @@
-const db = require('../fw/db');
+const { getFirestore } = require('firebase-admin/firestore');
+const db = getFirestore();
 
 async function getHtml() {
-    let conn = await db.connectDB();
     let html = '';
-    let [result, fields] = await conn.query("SELECT users.ID, users.username, roles.title FROM users INNER JOIN permissions ON users.ID = permissions.userID INNER JOIN roles ON permissions.roleID = roles.ID ORDER BY username");
+    let usersSnapshot = await db.collection('users').get();
 
     html += `
     <h2>User List</h2>
@@ -15,8 +15,9 @@ async function getHtml() {
             <th>Role</th>
         </tr>`;
 
-    result.map(function (record) {
-        html += `<tr><td>${sanitize(record.ID)}</td><td>${sanitize(record.username)}</td><td>${sanitize(record.title)}</td></tr>`;
+    usersSnapshot.forEach(doc => {
+        const user = doc.data();
+        html += `<tr><td>${sanitize(doc.id)}</td><td>${sanitize(user.email)}</td><td>${sanitize(user.isAdmin ? 'Admin' : 'User')}</td></tr>`;
     });
 
     html += `

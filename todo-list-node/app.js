@@ -50,6 +50,7 @@ app.use(async (req, res, next) => {
         try {
             const decodedToken = await auth.verifyToken(idToken);
             req.user = decodedToken;
+            req.user.uid = decodedToken.uid;
         } catch (error) {
             console.error('Error verifying token:', error);
         }

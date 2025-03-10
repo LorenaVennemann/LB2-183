@@ -26,7 +26,8 @@ async function getHtml(req) {
         <div>This is the insecure m183 test app</div>`;
 
     if (req.user && req.user.uid) {
-        const userDocRef = db.collection('users').doc(req.user.uid); const userDoc = await userDocRef.get();
+        const userDocRef = db.collection('users').doc(req.user.uid);
+        const userDoc = await userDocRef.get();
         if (userDoc.exists) {
             const userData = userDoc.data();
             console.log("userData: " + JSON.stringify(userData));
