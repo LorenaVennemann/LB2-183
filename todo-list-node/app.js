@@ -10,23 +10,34 @@ const footer = require('./fw/footer');
 const index = require('./index');
 const adminUser = require('./admin/users');
 const editTask = require('./edit');
+const { deleteTask } = require('./deletetask');
+const tasklist = require('./user/tasklist');
 const saveTask = require('./savetask');
 const search = require('./search');
 const searchProvider = require('./search/v2/index');
 const register = require('./register');
 const login = require('./login');
 const auth = require('./auth');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = 3000;
+
+app.use(express.static('public'));
 
 // Middleware für Session-Handling
 app.use(session({
     secret: 'secret',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
-    cookie: { httpOnly: true, secure: false } // in production secure: true
+    cookie: { secure: false } // in production secure: true
 }));
+
+function activeUserSession(req) {
+    return req.session && req.session.userid;
+}
 
 // Middleware für Body-Parser
 app.use(cors({
@@ -65,7 +76,62 @@ app.get('/', async (req, res) => {
         let html = await wrapContent(await index.html(req), req);
         res.send(html);
     } else {
-        res.redirect('/login');
+        res.redirect('login');
+    }
+});
+
+app.post('/login', async (req, res) => {
+    let content = await login.handleLogin(req, res);
+    let html = await wrapContent(content.html, req);
+    res.redirect('/');
+});
+
+// edit task
+app.get('/admin/users', async (req, res) => {
+    if (req.user) {
+        let html = await wrapContent(await adminUser.html, req);
+        res.send(html);
+    } else {
+        res.redirect('/');
+    }
+});
+
+// edit task
+app.get('/edit', async (req, res) => {
+    if (req.user) {
+        let html = await wrapContent(await editTask.html(req), req);
+        res.send(html);
+    } else {
+        res.redirect('/');
+    }
+});
+
+// Login-Seite anzeigen
+app.get('/login', async (req, res) => {
+    let content = await login.handleLogin(req, res);
+
+    if (content.user.userid !== 0) {
+        // login was successful... set cookies and redirect to /
+        login.startUserSession(res, content.user);
+    } else {
+        // login unsuccessful or not made jet... display login form
+        let html = await wrapContent(content.html, req);
+        res.send(html);
+    }
+});
+
+
+app.get('/delete', deleteTask);
+
+// delete task
+app.post('/delete', async (req, res) => {
+    console.log('Session:', req.session); // Debugging-Ausgabe
+    if (activeUserSession(req)) {
+        console.log('User session is active'); // Debugging-Ausgabe
+        await deleteTask(req, res);
+    } else {
+        console.log('User session is not active'); // Debugging-Ausgabe
+        res.redirect('/');
     }
 });
 
