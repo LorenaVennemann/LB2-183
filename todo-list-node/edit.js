@@ -23,7 +23,7 @@ async function getHtml(req) {
             state = taskData.state;
         }
 
-        html += `<h1>Edit Task</h1>`;
+        html += `<h1>Edit Task</h1>`
     } else {
         html += `<h1>Create Task</h1>`;
     }

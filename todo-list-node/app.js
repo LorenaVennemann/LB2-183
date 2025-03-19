@@ -4,9 +4,9 @@ const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const cors = require('cors');
 const header = require('./fw/header');
 const footer = require('./fw/footer');
+const login = require('./login');
 const index = require('./index');
 const adminUser = require('./admin/users');
 const editTask = require('./edit');
@@ -16,10 +16,10 @@ const saveTask = require('./savetask');
 const search = require('./search');
 const searchProvider = require('./search/v2/index');
 const register = require('./register');
-const login = require('./login');
 const auth = require('./auth');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -70,10 +70,11 @@ app.use(async (req, res, next) => {
     next();
 });
 
+
 // Routen
 app.get('/', async (req, res) => {
     if (req.user) {
-        let html = await wrapContent(await index.html(req), req);
+        let html = await wrapContent(await index.html(req), req)
         res.send(html);
     } else {
         res.redirect('login');
@@ -105,6 +106,7 @@ app.get('/edit', async (req, res) => {
         res.redirect('/');
     }
 });
+
 
 // Login-Seite anzeigen
 app.get('/login', async (req, res) => {
@@ -182,11 +184,13 @@ app.post('/savetask', async (req, res) => {
     }
 });
 
+// search
 app.post('/search', async (req, res) => {
     let html = await search.html(req);
     res.send(html);
 });
 
+// search provider
 app.get('/search/v2/', async (req, res) => {
     let result = await searchProvider.search(req);
     res.send(result);
@@ -196,6 +200,7 @@ app.get('/search/v2/', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
 
 async function wrapContent(content, req) {
     let headerHtml = await header(req);

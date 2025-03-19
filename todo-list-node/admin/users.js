@@ -1,13 +1,11 @@
 const { getFirestore } = require('firebase-admin/firestore');
 const db = getFirestore();
-
 async function getHtml() {
     let html = '';
     let usersSnapshot = await db.collection('users').get();
     
     html += `
     <h2>User List</h2>
-    
     <table>
         <tr>
             <th>ID</th>
