@@ -53,6 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 app.use('/auth', register);
+app.use('/login', login);
 
 // Middleware zur Überprüfung der Authentifizierung
 app.use(async (req, res, next) => {
@@ -95,7 +96,6 @@ app.get('/admin/users', async (req, res) => {
         res.redirect('/');
     }
 });
-
 
 // edit task
 app.get('/edit', async (req, res) => {
@@ -140,9 +140,9 @@ app.post('/delete', async (req, res) => {
 // Logout
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.cookie('username', '');
-    res.cookie('userid', '');
-    res.cookie('idToken', '');
+    res.clearCookie('username');
+    res.clearCookie('userid');
+    res.clearCookie('idToken');
     res.redirect('/login');
 });
 
@@ -156,7 +156,25 @@ app.get('/profile', async (req, res) => {
     }
 });
 
-// save task
+// Andere Routen bleiben unverändert
+app.get('/admin/users', async (req, res) => {
+    if (req.user) {
+        let html = await wrapContent(await adminUser.html, req);
+        res.send(html);
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/edit', async (req, res) => {
+    if (req.user) {
+        let html = await wrapContent(await editTask.html(req), req);
+        res.send(html);
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.post('/savetask', async (req, res) => {
     if (req.user) {
         let html = await wrapContent(await saveTask.html(req), req);
@@ -183,8 +201,8 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+
 async function wrapContent(content, req) {
     let headerHtml = await header(req);
     return headerHtml + content + footer;
 }
-
