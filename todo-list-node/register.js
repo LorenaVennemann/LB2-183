@@ -15,27 +15,26 @@ if (!admin.apps.length) {
 const db = getFirestore();
 
 router.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'register.html'));
+    res.render(path.join(__dirname, 'views', 'register.ejs'));
 });
 
 router.post('/register', async (req, res) => {
     try {
-        const userRecord = await admin.auth().createUser({
-            email: req.body.email,
-            password: req.body.password
-        });
+        // Verifiziere das ID-Token, das vom Client gesendet wurde
+        const decodedToken = await admin.auth().verifyIdToken(req.body.idToken);
+        const uid = decodedToken.uid;
 
         // Speichere Benutzerinformationen in Firestore
-        const userDocRef = db.collection('users').doc(userRecord.uid);
+        const userDocRef = db.collection('users').doc(uid);
         await userDocRef.set({
-            email: userRecord.email,
+            email: decodedToken.email,
             isAdmin: false // Standardmässig kein Admin
         });
 
-        res.redirect('/login');
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error('Admin SDK Error:', error);
-        res.status(400).send(`Error: ${error.message}`);
+        res.status(400).json({ error: `Error: ${error.message}` });
     }
 });
 

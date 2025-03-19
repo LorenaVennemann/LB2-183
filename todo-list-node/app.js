@@ -4,65 +4,75 @@ const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const header = require('./fw/header');
-const footer = require('./fw/footer');
-const login = require('./login');
-const index = require('./index');
-const adminUser = require('./admin/users');
-const editTask = require('./edit');
-const { deleteTask } = require('./deletetask');
-const tasklist = require('./user/tasklist');
-const saveTask = require('./savetask');
-const search = require('./search');
-const searchProvider = require('./search/v2/index');
-const register = require('./register');
-const auth = require('./auth');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
 
+// Import routes
+const login = require('./login');
+const auth = require('./auth');
+const register = require('./register');
+
+// Initialize Firebase Admin
+const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+}
+const db = getFirestore();
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = 3000;
 
+// Set up EJS as the template engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Middleware for parsing requests
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Middleware für Session-Handling
+// Middleware for Session-Handling
 app.use(session({
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET || 'secret',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // in production secure: true
+    cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
-function activeUserSession(req) {
-    return req.session && req.session.userid;
-}
-
-// Middleware für Body-Parser
+// CORS middleware
 app.use(cors({
-    origin: 'http://localhost', // Ohne Port wenn auf 80 gemapped
+    origin: 'http://localhost',
     methods: ['POST', 'GET'],
     allowedHeaders: ['Content-Type']
 }));
 
-app.use(express.static('views'));
+// Static files and other middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
+// Route setup
 app.use('/auth', register);
 app.use('/login', login);
 
-// Middleware zur Überprüfung der Authentifizierung
+// Token verification middleware
 app.use(async (req, res, next) => {
     const idToken = req.cookies.idToken;
     if (idToken) {
         try {
-            const decodedToken = await auth.verifyToken(idToken);
+            const decodedToken = await admin.auth().verifyIdToken(idToken);
             req.user = decodedToken;
             req.user.uid = decodedToken.uid;
+
+            // Get user data from Firestore
+            const userDoc = await db.collection('users').doc(req.user.uid).get();
+            if (userDoc.exists) {
+                req.userData = userDoc.data();
+            }
         } catch (error) {
             console.error('Error verifying token:', error);
         }
@@ -70,71 +80,55 @@ app.use(async (req, res, next) => {
     next();
 });
 
-
-// Routen
-app.get('/', async (req, res) => {
+// Protected routes middleware
+function requireAuth(req, res, next) {
     if (req.user) {
-        let html = await wrapContent(await index.html(req), req)
-        res.send(html);
+        next();
     } else {
-        res.redirect('login');
+        res.redirect('/login');
     }
+}
+
+// Routes
+app.get('/', requireAuth, async (req, res) => {
+    const tasksSnapshot = await db.collection('tasks').where('userId', '==', req.user.uid).get();
+    const tasks = [];
+    
+    tasksSnapshot.forEach(doc => {
+        tasks.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+
+    res.render('index', { 
+        user: req.user,
+        userData: req.userData,
+        tasks: tasks
+    });
 });
 
-app.post('/login', async (req, res) => {
-    let content = await login.handleLogin(req, res);
-    let html = await wrapContent(content.html, req);
-    res.redirect('/');
+// Email verification route
+app.get('/verify-email', requireAuth, (req, res) => {
+    res.render('verify-email', { 
+        user: req.user,
+        userData: req.userData 
+    });
 });
 
-// edit task
-app.get('/admin/users', async (req, res) => {
-    if (req.user) {
-        let html = await wrapContent(await adminUser.html, req);
-        res.send(html);
-    } else {
-        res.redirect('/');
+// Setup MFA route
+app.get('/setup-mfa', requireAuth, async (req, res) => {
+    // Only allow if email is verified
+    const userRecord = await admin.auth().getUser(req.user.uid);
+    
+    if (!userRecord.emailVerified) {
+        return res.redirect('/verify-email');
     }
-});
-
-// edit task
-app.get('/edit', async (req, res) => {
-    if (req.user) {
-        let html = await wrapContent(await editTask.html(req), req);
-        res.send(html);
-    } else {
-        res.redirect('/');
-    }
-});
-
-
-// Login-Seite anzeigen
-app.get('/login', async (req, res) => {
-    let content = await login.handleLogin(req, res);
-
-    if (content.user.userid !== 0) {
-        // login was successful... set cookies and redirect to /
-        login.startUserSession(res, content.user);
-    } else {
-        // login unsuccessful or not made jet... display login form
-        let html = await wrapContent(content.html, req);
-        res.send(html);
-    }
-});
-
-
-app.get('/delete', deleteTask);
-
-// delete task
-app.post('/delete', async (req, res) => {
-    console.log('Session:', req.session); // Debugging-Ausgabe
-    if (activeUserSession(req)) {
-        console.log('User session is active'); // Debugging-Ausgabe
-        await deleteTask(req, res);
-    } else {
-        console.log('User session is not active'); // Debugging-Ausgabe
-        res.redirect('/');
-    }
+    
+    res.render('setup-mfa', { 
+        user: req.user,
+        userData: req.userData
+    });
 });
 
 // Logout
@@ -146,63 +140,41 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-// Profilseite anzeigen
-app.get('/profile', async (req, res) => {
-    if (req.user) {
-        const userRecord = await auth.getUser(req.user.uid);
-        res.send(`Welcome, ${userRecord.displayName || userRecord.email}! <a href="/logout">Logout</a>`);
-    } else {
-        res.send('Please login to view this page');
+// Profile page
+app.get('/profile', requireAuth, async (req, res) => {
+    const userRecord = await admin.auth().getUser(req.user.uid);
+    res.render('profile', {
+        user: req.user,
+        userData: req.userData,
+        userRecord: userRecord
+    });
+});
+
+// Admin routes
+app.get('/admin/users', requireAuth, async (req, res) => {
+    // Check if user is admin
+    if (!req.userData || !req.userData.isAdmin) {
+        return res.redirect('/');
     }
+    
+    const usersSnapshot = await db.collection('users').get();
+    const users = [];
+    
+    usersSnapshot.forEach(doc => {
+        users.push({
+            id: doc.id,
+            ...doc.data()
+        });
+    });
+    
+    res.render('admin/users', { 
+        user: req.user,
+        userData: req.userData,
+        users: users
+    });
 });
 
-// Andere Routen bleiben unverändert
-app.get('/admin/users', async (req, res) => {
-    if (req.user) {
-        let html = await wrapContent(await adminUser.html, req);
-        res.send(html);
-    } else {
-        res.redirect('/');
-    }
-});
-
-app.get('/edit', async (req, res) => {
-    if (req.user) {
-        let html = await wrapContent(await editTask.html(req), req);
-        res.send(html);
-    } else {
-        res.redirect('/');
-    }
-});
-
-app.post('/savetask', async (req, res) => {
-    if (req.user) {
-        let html = await wrapContent(await saveTask.html(req), req);
-        res.send(html);
-    } else {
-        res.redirect('/');
-    }
-});
-
-// search
-app.post('/search', async (req, res) => {
-    let html = await search.html(req);
-    res.send(html);
-});
-
-// search provider
-app.get('/search/v2/', async (req, res) => {
-    let result = await searchProvider.search(req);
-    res.send(result);
-});
-
-// Server starten
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-async function wrapContent(content, req) {
-    let headerHtml = await header(req);
-    return headerHtml + content + footer;
-}

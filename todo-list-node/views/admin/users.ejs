@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+
+<h2>User List</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Role</th>
+    </tr>
+    <% if (users.length === 0) { %>
+        <tr><td colspan="3">No users found</td></tr>
+    <% } else { %>
+        <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.email %></td>
+                <td><%= user.isAdmin ? 'Admin' : 'User' %></td>
+            </tr>
+        <% }) %>
+    <% } %>
+</table>
+
+<%- include('../partials/footer') %>

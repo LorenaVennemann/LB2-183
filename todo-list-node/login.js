@@ -10,7 +10,6 @@ const router = express.Router();
 
 // Firebase Admin SDK für serverseitige Authentifizierung
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
-const db = getFirestore();
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -18,13 +17,15 @@ if (!admin.apps.length) {
     });
 }
 
+const db = getFirestore();
+
 // Firebase Client SDK für Auth
 const clientApp = initializeApp(firebaseConfig);
 const auth = getAuth(clientApp);
 
 // HTML-Login-Seite rendern
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    res.render(path.join(__dirname, 'views', 'login.ejs'));
 });
 
 // Login mit E-Mail & Passwort
