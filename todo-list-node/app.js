@@ -9,11 +9,6 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
 
-// Import routes
-const login = require('./login');
-const auth = require('./auth');
-const register = require('./register');
-
 // Initialize Firebase Admin
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
 if (!admin.apps.length) {
@@ -55,10 +50,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
-// Route setup
-app.use('/auth', register);
-app.use('/login', login);
-
 // Token verification middleware
 app.use(async (req, res, next) => {
     const idToken = req.cookies.idToken;
@@ -75,6 +66,10 @@ app.use(async (req, res, next) => {
             }
         } catch (error) {
             console.error('Error verifying token:', error);
+            if (error.code === 'auth/id-token-expired') {
+                // Token is expired, redirect to login
+                return res.redirect('/login');
+            }
         }
     }
     next();
@@ -88,6 +83,22 @@ function requireAuth(req, res, next) {
         res.redirect('/login');
     }
 }
+
+// Import routes
+const login = require('./login');
+const register = require('./register');
+const search = require('./search');
+const edit = require('./edit');
+const savetask = require('./savetask');
+const deletetask = require('./deletetask');
+
+// Route setup
+app.use('/auth', register);
+app.use('/login', login);
+app.use('/search', search);
+app.use('/edit', requireAuth, edit);
+app.use('/savetask', requireAuth, savetask);
+app.use('/delete', requireAuth, deletetask);
 
 // Routes
 app.get('/', requireAuth, async (req, res) => {
@@ -142,6 +153,7 @@ app.get('/logout', (req, res) => {
 
 // Profile page
 app.get('/profile', requireAuth, async (req, res) => {
+    console.log("req.user", req.user);
     const userRecord = await admin.auth().getUser(req.user.uid);
     res.render('profile', {
         user: req.user,
@@ -171,6 +183,34 @@ app.get('/admin/users', requireAuth, async (req, res) => {
         user: req.user,
         userData: req.userData,
         users: users
+    });
+});
+
+// Edit route
+app.get('/edit', requireAuth, async (req, res) => {
+    let title = '';
+    let state = '';
+    let taskId = '';
+    let options = ["Open", "In Progress", "Done"];
+
+    if (req.query.id !== undefined) {
+        taskId = req.query.id;
+        const taskDocRef = db.collection('tasks').doc(taskId);
+        const taskDoc = await taskDocRef.get();
+        if (taskDoc.exists) {
+            const taskData = taskDoc.data();
+            title = taskData.title;
+            state = taskData.state;
+        }
+    }
+
+    res.render('edit', { 
+        user: req.user,
+        userData: req.userData,
+        taskId: taskId,
+        title: title,
+        state: state,
+        options: options
     });
 });
 

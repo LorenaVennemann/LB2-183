@@ -42,8 +42,13 @@ router.post('/', async (req, res) => {
             res.cookie('idToken', idToken, { httpOnly: true, secure: false }); // secure: true in Produktion
             return res.json({ success: true, user });
         } catch (error) {
-            msg = `Login fehlgeschlagen Email oder Passwort ist falsch`;
-            return res.status(401).json({ error: msg });
+            if (error.code === 'auth/multi-factor-auth-required') {
+                // MFA ist erforderlich
+                return res.status(401).json({ error: 'MFA erforderlich', resolver: error.resolver });
+            } else {
+                msg = `Login fehlgeschlagen Email oder Passwort ist falsch`;
+                return res.status(401).json({ error: msg });
+            }
         }
     }
 

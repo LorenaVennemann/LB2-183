@@ -1,7 +1,10 @@
+const express = require('express');
 const { getFirestore } = require('firebase-admin/firestore');
+const router = express.Router();
+
 const db = getFirestore();
 
-async function deleteTask(req, res) {
+router.get('/', async (req, res) => {
     if (req.query.id !== undefined && req.query.id.length !== 0) {
         let taskId = req.query.id;
         try {
@@ -14,6 +17,6 @@ async function deleteTask(req, res) {
     } else {
         res.send("<span class='info info-error'>No task ID provided</span>");
     }
-}
+});
 
-module.exports = { deleteTask };
+module.exports = router;

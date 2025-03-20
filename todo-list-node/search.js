@@ -1,51 +1,38 @@
-const axios = require('axios');
-const querystring = require('querystring');
+const express = require('express');
+const router = express.Router();
+const { getFirestore } = require('firebase-admin/firestore');
+const db = getFirestore();
 
-async function getHtml(req) {
-    console.log('Received request body:', req.body);
-
-    if (!req.body.terms || !req.user || !req.user.uid) {
-        return "Not enough information provided";
+router.post('/', async (req, res) => {
+    if (!req.body.userid || !req.body.terms) {
+        return res.status(400).send("Not enough information to search");
     }
 
-    let terms = sanitize(req.body.terms);
-    let userid = sanitize(req.user.uid);
-
-    console.log('Terms:', terms);
-    console.log('UserID:', userid);
-
-    let theUrl = `http://localhost:3000/search/v2/?userid=${userid}&terms=${terms}`;
-    let result = await callAPI('GET', theUrl, false);
-    return result;
-}
-
-async function callAPI(method, url, data) {
-    let noResults = 'No results found!';
-    let result;
+    let userid = req.body.userid;
+    let terms = req.body.terms.toLowerCase(); // Konvertiere die Suchbegriffe in Kleinbuchstaben
+    let result = '';
 
     try {
-        switch (method) {
-            case "POST":
-                result = await axios.post(url, data);
-                break;
-            case "PUT":
-                result = await axios.put(url, data);
-                break;
-            default:
-                if (data) {
-                    url = `${url}?${querystring.stringify(data)}`;
+        const tasksSnapshot = await db.collection('tasks')
+            .where('userId', '==', userid)
+            .get();
+
+        if (tasksSnapshot.empty) {
+            result = 'No results found!';
+        } else {
+            tasksSnapshot.forEach(doc => {
+                const task = doc.data();
+                if (task.title.toLowerCase().includes(terms)) { // Überprüfe, ob der Titel die Suchbegriffe enthält
+                    result += `${task.title} (${task.state})<br />`;
                 }
-                result = await axios.get(url);
+            });
         }
-        return result.data;
     } catch (error) {
-        console.error('Error calling API:', error);
-        return noResults;
+        console.error('Error executing query:', error);
+        result = 'Error executing query';
     }
-}
 
-function sanitize(input) {
-    return input.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-}
+    res.send(result);
+});
 
-module.exports = { html: getHtml };
+module.exports = router;

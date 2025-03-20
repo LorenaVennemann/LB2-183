@@ -1,0 +1,30 @@
+<%- include('./partials/header') %>
+
+<h1><%= taskId ? 'Edit Task' : 'Create Task' %></h1>
+
+<form id="form" method="post" action="/savetask">
+    <input type="hidden" name="id" value="<%= taskId %>" />
+    <div class="form-group">
+        <label for="title">Description</label>
+        <input type="text" class="form-control size-medium" name="title" id="title" value="<%= title %>">
+    </div>
+    <div class="form-group">
+        <label for="state">State</label>
+        <select name="state" id="state" class="size-auto">
+            <% options.forEach(option => { %>
+                <option value="<%= option.toLowerCase() %>" <%= state.toLowerCase() === option.toLowerCase() ? 'selected' : '' %>><%= option %></option>
+            <% }) %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="submit" ></label>
+        <input id="submit" type="submit" class="btn size-auto" value="Submit" />
+    </div>
+</form>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/edit.js"></script>
+
+<%- include('./partials/footer') %>
