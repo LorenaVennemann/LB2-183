@@ -33,20 +33,41 @@ router.post('/', async (req, res) => {
     let msg = '';
     let user = { username: '', userid: 0 };
 
-    if (req.body.email && req.body.password) {
+    if (req.body.idToken) {
+        // MFA-Login oder bereits authentifizierter Benutzer
+        try {
+            const decodedToken = await admin.auth().verifyIdToken(req.body.idToken);
+            user.username = decodedToken.email;
+            user.userid = decodedToken.uid;
+            
+            res.cookie('idToken', req.body.idToken, { httpOnly: true, secure: false }); // secure: true in Produktion
+            res.cookie('username', user.username);
+            res.cookie('userid', user.userid);
+            
+            return res.json({ success: true, user });
+        } catch (error) {
+            return res.status(401).json({ error: `Token-Verifizierung fehlgeschlagen: ${error.message}` });
+        }
+    } else if (req.body.email && req.body.password) {
+        // Standardlogin mit E-Mail und Passwort
         try {
             const userCredential = await signInWithEmailAndPassword(auth, req.body.email, req.body.password);
             user.username = userCredential.user.email;
             user.userid = userCredential.user.uid;
             const idToken = await userCredential.user.getIdToken();
+            
             res.cookie('idToken', idToken, { httpOnly: true, secure: false }); // secure: true in Produktion
+            res.cookie('username', user.username);
+            res.cookie('userid', user.userid);
+            
             return res.json({ success: true, user });
         } catch (error) {
             if (error.code === 'auth/multi-factor-auth-required') {
-                // MFA ist erforderlich
-                return res.status(401).json({ error: 'MFA erforderlich', resolver: error.resolver });
+                // MFA ist erforderlich, aber wir können keine vollständigen Resolver-Daten zurücksenden
+                // Client muss dies selbst behandeln
+                return res.status(401).json({ error: 'MFA erforderlich' });
             } else {
-                msg = `Login fehlgeschlagen Email oder Passwort ist falsch`;
+                msg = `Login fehlgeschlagen: ${error.message}`;
                 return res.status(401).json({ error: msg });
             }
         }
@@ -86,7 +107,7 @@ router.post('/google', async (req, res) => {
         await userDocRef.set({
              email: user.email,
              isAdmin: false
-        });
+        }, { merge: true });
 
         res.cookie('idToken', idToken, { httpOnly: true, secure: false });
         res.cookie('username', decodedToken.email);
