@@ -1,0 +1,18 @@
+<nav>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/">Tasks</a>
+        </li>
+        <% if (typeof userData !== 'undefined' && userData && userData.isAdmin) { %>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/admin/users">User List</a>
+        </li>
+        <% } %>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/profile">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="/logout">Logout</a>
+        </li>
+    </ul>
+</nav>

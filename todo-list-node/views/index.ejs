@@ -1,0 +1,11 @@
+<%- include('./partials/header') %>
+
+<h2>Welcome, <%= user ? user.email : 'Guest' %>!</h2>
+
+<%- include('./partials/tasklist', { tasks: tasks }) %>
+
+<hr />
+
+<%- include('./partials/backgroundsearch') %>
+
+<%- include('./partials/footer') %>

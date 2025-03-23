@@ -1,8 +1,10 @@
+const express = require('express');
 const { getFirestore } = require('firebase-admin/firestore');
+const router = express.Router();
+
 const db = getFirestore();
 
-async function getHtml(req) {
-    let html = '';
+router.post('/', async (req, res) => {
     let taskId = '';
 
     if (req.body.id !== undefined && req.body.id.length !== 0) {
@@ -34,12 +36,10 @@ async function getHtml(req) {
             });
         }
 
-        html += "<span class='info info-success'>Update successful</span>";
+        res.redirect('/');
     } else {
-        html += "<span class='info info-error'>No update was made</span>";
+        res.send("<span class='info info-error'>No update was made</span>");
     }
+});
 
-    return html;
-}
-
-module.exports = { html: getHtml };
+module.exports = router;

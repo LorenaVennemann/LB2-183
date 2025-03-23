@@ -1,0 +1,25 @@
+<section id="list">
+    <a href="edit">Create Task</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>State</th>
+            <th></th>
+        </tr>
+        <% if (tasks.length === 0) { %>
+            <tr><td colspan="4">No tasks found</td></tr>
+        <% } else { %>
+            <% tasks.forEach(task => { %>
+                <tr>
+                    <td><%= task.id %></td>
+                    <td class="wide"><%= task.title %></td>
+                    <td><%= task.state %></td>
+                    <td>
+                        <a href="edit?id=<%= task.id %>">edit</a> | <a href="delete?id=<%= task.id %>">delete</a>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </table>
+</section>
