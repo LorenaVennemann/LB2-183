@@ -3,7 +3,7 @@
 <div class="container">
     <h2>Profile</h2>
     <div id="mfaStatus" class="alert alert-info"></div>
-    <div id="authSection">
+    <div id="authSection" class="d-none">
         <h3>Set up Multi-Factor Authentication</h3>
         <form id="reauthForm">
             <div class="mb-3">
@@ -29,7 +29,7 @@
         <form id="setupForm">
             <div class="mb-3">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="+1234567890" required>
             </div>
             <div id="recaptcha-container" class="mb-3"></div>
             <button type="submit" class="btn btn-primary">Enable MFA</button>
@@ -51,6 +51,7 @@
         <div class="alert alert-success">
             <h4>MFA Setup Successful</h4>
             <p>Multi-Factor Authentication has been successfully set up.</p>
+            <p>Refresh or change the Page.</p>
         </div>
     </div>
 </div>

@@ -4,11 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let verificationId = null;
 
     // Auth-Status überwachen
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
             // Benutzer ist angemeldet
             currentUser = user;
             document.getElementById('userEmail').textContent = user.email;
+
+            // Überprüfe den MFA-Status
+            await user.reload();
+            const mfaStatusDiv = document.getElementById('mfaStatus');
+            const authSection = document.getElementById('authSection');
+            if (user.multiFactor.enrolledFactors.length > 0) {
+                mfaStatusDiv.textContent = 'Multi-Factor Authentication is enabled.';
+                mfaStatusDiv.classList.remove('alert-info');
+                mfaStatusDiv.classList.add('alert-success');
+                authSection.classList.add('d-none');
+            } else {
+                mfaStatusDiv.textContent = 'Multi-Factor Authentication is not enabled.';
+                mfaStatusDiv.classList.remove('alert-info');
+                mfaStatusDiv.classList.add('alert-warning');
+                authSection.classList.remove('d-none');
+            }
         } else {
             // Benutzer ist nicht angemeldet, zur Anmeldeseite weiterleiten
             window.location.href = '/login';
@@ -97,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('verificationSection').classList.remove('d-none');
             })
             .catch((error) => {
-                console.error('Fehler beim Senden der SMS, schmeiss dein Handy aus dem Fenster!');
+                console.error('Fehler beim Senden der SMS');
                 alert('Fehler beim Senden der SMS');
 
                 // reCAPTCHA zurücksetzen
@@ -127,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('successSection').classList.remove('d-none');
             })
             .catch((error) => {
-                console.error('Fehler bei der MFA-Einrichtung, versuche es später erneut');
+                console.error('Fehler bei der MFA-Einrichtung');
                 alert('Fehler bei der MFA-Einrichtung');
             });
     });
