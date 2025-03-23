@@ -8,6 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
+const helmet = require('helmet');
 
 // Initialize Firebase Admin
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
@@ -49,6 +50,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+
+// Helmet middleware for security headers
+app.use(helmet());
+
+// Configure CSP
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://www.gstatic.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", "https://www.googleapis.com"],
+        fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        frameAncestors: ["'none'"],
+        formAction: ["'self'"]
+    }
+}));
 
 // Token verification middleware
 app.use(async (req, res, next) => {
