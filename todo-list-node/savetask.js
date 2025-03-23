@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
         taskId = req.body.id;
         const taskDocRef = db.collection('tasks').doc(taskId);
         const taskDoc = await taskDocRef.get();
-        if (!taskDoc.exists) {
+        if (!taskDoc.exists || taskDoc.data().userId !== req.user.uid) {
             taskId = '';
         }
     }
