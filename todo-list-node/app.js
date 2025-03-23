@@ -32,10 +32,14 @@ app.use(express.static('public'));
 
 // Middleware for Session-Handling
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'Strict'
+    }
 }));
 
 // CORS middleware
@@ -224,7 +228,7 @@ app.get('/edit', requireAuth, async (req, res) => {
         taskId = req.query.id;
         const taskDocRef = db.collection('tasks').doc(taskId);
         const taskDoc = await taskDocRef.get();
-        if (taskDoc.exists) {
+        if (taskDoc.exists && taskDoc.data().userId === req.user.uid) {
             const taskData = taskDoc.data();
             title = taskData.title;
             state = taskData.state;
