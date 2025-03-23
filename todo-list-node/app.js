@@ -123,7 +123,7 @@ const deletetask = require('./deletetask');
 // Route setup
 app.use('/auth', register);
 app.use('/login', login);
-app.use('/search', search);
+app.use('/search', requireAuth, search);
 app.use('/edit', requireAuth, edit);
 app.use('/savetask', requireAuth, savetask);
 app.use('/delete', requireAuth, deletetask);

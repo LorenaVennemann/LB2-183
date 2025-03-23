@@ -9,8 +9,9 @@ router.post('/', async (req, res) => {
     }
 
     let userid = req.body.userid;
-    let terms = req.body.terms.toLowerCase(); // Konvertiere die Suchbegriffe in Kleinbuchstaben
+    let terms = req.body.terms.toLowerCase();
     let result = '';
+    let found = false;
 
     try {
         const tasksSnapshot = await db.collection('tasks')
@@ -22,10 +23,14 @@ router.post('/', async (req, res) => {
         } else {
             tasksSnapshot.forEach(doc => {
                 const task = doc.data();
-                if (task.title.toLowerCase().includes(terms)) { // Überprüfe, ob der Titel die Suchbegriffe enthält
+                if (task.title.toLowerCase().includes(terms)) {
                     result += `${task.title} (${task.state})<br />`;
+                    found = true;
                 }
             });
+            if (!found) {
+                result = 'No results found!';
+            }
         }
     } catch (error) {
         console.error('Fehler beim Suchen');
