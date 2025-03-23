@@ -33,7 +33,6 @@
                 $("#msg").removeClass('d-none').show();
                 $("#result").html("");
                 $.post("search", { provider: provider, terms: terms, userid: userid }, function(data){
-                    console.log(data);
                     $("#result").html(data);
                     $("#msg").hide(500);
                     $("#result").removeClass('d-none').show(500);

@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error('Error executing query:', error);
+        console.error('Fehler beim Suchen');
         result = 'Error executing query';
     }
 

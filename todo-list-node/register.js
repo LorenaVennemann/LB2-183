@@ -33,8 +33,8 @@ router.post('/register', async (req, res) => {
 
         res.status(200).json({ success: true });
     } catch (error) {
-        console.error('Admin SDK Error:', error);
-        res.status(400).json({ error: `Error: ${error.message}` });
+        console.error('Admin SDK Error');
+        res.status(400).json({ error: `Fehler beim Registrieren` });
     }
 });
 

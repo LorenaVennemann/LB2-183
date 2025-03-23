@@ -65,7 +65,7 @@ app.use(async (req, res, next) => {
                 req.userData = userDoc.data();
             }
         } catch (error) {
-            console.error('Error verifying token:', error);
+            console.error('Error verifying token');
             if (error.code === 'auth/id-token-expired') {
                 // Token is expired, redirect to login
                 return res.redirect('/login');
@@ -153,7 +153,6 @@ app.get('/logout', (req, res) => {
 
 // Profile page
 app.get('/profile', requireAuth, async (req, res) => {
-    console.log("req.user", req.user);
     const userRecord = await admin.auth().getUser(req.user.uid);
     res.render('profile', {
         user: req.user,

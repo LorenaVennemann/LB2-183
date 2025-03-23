@@ -115,8 +115,8 @@ router.post('/google', async (req, res) => {
 
         return res.json({ success: true });
     } catch (error) {
-        console.error('Google Login Fehler:', error);
-        return res.status(401).json({ error: `Login fehlgeschlagen: ${error.message}` });
+        console.error('Google Login Fehler');
+        return res.status(401).json({ error: `Login fehlgeschlagen, versuche es später erneut` });
     }
 });
 

@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch((error) => {
-                console.error('Fehler bei der erneuten Authentifizierung:', error);
-                alert('Fehler bei der erneuten Authentifizierung: ' + error.message);
+                console.error('Fehler bei der erneuten Authentifizierung');
+                alert('Fehler bei der erneuten Authentifizierung');
             });
     });
 
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
         currentUser.sendEmailVerification().then(() => {
             alert('Verifikations-E-Mail wurde erneut gesendet.');
         }).catch((error) => {
-            console.error('Fehler beim Senden der Verifikations-E-Mail:', error);
-            alert('Fehler beim Senden der Verifikations-E-Mail: ' + error.message);
+            console.error('Fehler beim Senden der Verifikations-E-Mail, versuche es später erneut.');
+            alert('Fehler beim Senden der Verifikations-E-Mail');
         });
     });
 
@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('verificationSection').classList.remove('d-none');
             })
             .catch((error) => {
-                console.error('Fehler beim Senden der SMS:', error);
-                alert('Fehler beim Senden der SMS: ' + error.message);
+                console.error('Fehler beim Senden der SMS, schmeiss dein Handy aus dem Fenster!');
+                alert('Fehler beim Senden der SMS');
 
                 // reCAPTCHA zurücksetzen
                 recaptchaVerifier.clear();
@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('successSection').classList.remove('d-none');
             })
             .catch((error) => {
-                console.error('Fehler bei der MFA-Einrichtung:', error);
-                alert('Fehler bei der MFA-Einrichtung: ' + error.message);
+                console.error('Fehler bei der MFA-Einrichtung, versuche es später erneut');
+                alert('Fehler bei der MFA-Einrichtung');
             });
     });
 });

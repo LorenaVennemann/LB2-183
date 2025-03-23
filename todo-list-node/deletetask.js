@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
             await db.collection('tasks').doc(taskId).delete();
             res.redirect('/'); // Redirect to the task list after deletion
         } catch (error) {
-            console.error('Error deleting task:', error);
+            console.error('Error deleting task');
             res.send("<span class='info info-error'>Error deleting task</span>");
         }
     } else {
