@@ -46,7 +46,6 @@ app.use(cors({
 }));
 
 // Static files and other middleware
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
@@ -58,11 +57,22 @@ app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://www.gstatic.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
-        styleSrc: ["'self'", "https://cdn.jsdelivr.net"],
-        imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'", "https://www.googleapis.com"],
-        fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        scriptSrc: [
+            "'self'", 
+            "https://www.gstatic.com", 
+            "https://cdnjs.cloudflare.com", 
+            "https://cdn.jsdelivr.net",
+            "https://www.google.com",
+            "https://www.google-analytics.com",
+            "https://www.googletagmanager.com",
+            "https://www.recaptcha.net",
+            "'unsafe-inline'"
+        ],
+        styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https://www.google.com", "https://www.gstatic.com"],
+        connectSrc: ["'self'", "https://www.googleapis.com", "https://securetoken.googleapis.com", "https://identitytoolkit.googleapis.com"],
+        fontSrc: ["'self'", "https://cdn.jsdelivr.net", "data:"],
+        frameSrc: ["'self'", "https://www.google.com", "https://www.recaptcha.net"],
         frameAncestors: ["'none'"],
         formAction: ["'self'"]
     }
@@ -230,6 +240,12 @@ app.get('/edit', requireAuth, async (req, res) => {
         options: options
     });
 });
+
+// If the Rout doesn't exist
+app.use((req, res) => {
+    res.status(404);
+    res.type('text/plain').send('404 Not Found');
+  });
 
 // Start the server
 app.listen(PORT, () => {
