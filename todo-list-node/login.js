@@ -30,6 +30,10 @@ router.get('/', (req, res) => {
 
 // Login mit E-Mail & Passwort
 router.post('/', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'E-Mail und Passwort erforderlich' });
+    }
     let msg = '';
     let user = { username: '', userid: 0 };
 
@@ -67,7 +71,7 @@ router.post('/', async (req, res) => {
                 // Client muss dies selbst behandeln
                 return res.status(401).json({ error: 'MFA erforderlich' });
             } else {
-                msg = `Login fehlgeschlagen: ${error.message}`;
+                msg = `Login fehlgeschlagen`;
                 return res.status(401).json({ error: msg });
             }
         }
