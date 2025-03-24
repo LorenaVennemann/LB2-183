@@ -8,6 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
+const rateLimit = require('express-rate-limit');
 
 // Initialize Firebase Admin
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
@@ -20,6 +21,16 @@ const db = getFirestore();
 
 const app = express();
 const PORT = 3000;
+
+// Rate Limiting Middleware
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 Minuten
+    max: 60,
+    message: 'Zu viele Anfragen von dieser IP, bitte versuchen Sie es später erneut.'
+});
+
+// Anwenden der Rate Limiting Middleware auf alle Routen
+app.use(limiter);
 
 // Set up EJS as the template engine
 app.set('view engine', 'ejs');
