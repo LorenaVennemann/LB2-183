@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
         const userDocRef = db.collection('users').doc(uid);
         await userDocRef.set({
             email: decodedToken.email,
-            isAdmin: false // Standardmässig kein Admin
+            isAdmin: false
         });
 
         res.status(200).json({ success: true });

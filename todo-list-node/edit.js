@@ -1,6 +1,5 @@
 const express = require('express');
 const { getFirestore } = require('firebase-admin/firestore');
-const escapeHtml = require('escape-html');
 
 const db = getFirestore();
 const router = express.Router();
