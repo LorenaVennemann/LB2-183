@@ -4,6 +4,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
+    const honeypot = document.getElementById('honeypot').value;
     const errorDiv = document.getElementById('error-message');
     const submitButton = document.querySelector('#registerForm button[type="submit"]');
     
@@ -20,6 +21,11 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     
     if (password.length < 6) {
         errorDiv.textContent = 'Password must be at least 6 characters';
+        return;
+    }
+    
+    if (honeypot) {
+        errorDiv.textContent = 'Bot detected';
         return;
     }
     
@@ -40,7 +46,8 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 email, 
-                idToken 
+                idToken,
+                honeypot
             })
         });
         
