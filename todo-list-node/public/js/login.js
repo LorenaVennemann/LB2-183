@@ -143,8 +143,8 @@ function handleMFA(error) {
     // Store the resolver
     resolver = error.resolver;
     
-    // Get MFA hint (phone)
-    const selectedHint = resolver.hints[0]; // Use first MFA method
+    // Get MFA
+    const selectedHint = resolver.hints[0];
     
     // Create phone info options
     const phoneInfoOptions = {

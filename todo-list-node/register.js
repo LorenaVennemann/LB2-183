@@ -20,6 +20,11 @@ router.get('/register', (req, res) => {
 
 router.post('/register', async (req, res) => {
     try {
+        // Honeypot-Feld prüfen
+        if (req.body.honeypot) {
+            return res.status(400).json({ error: 'Bot detected' });
+        }
+
         // Verifiziere das ID-Token, das vom Client gesendet wurde
         const decodedToken = await admin.auth().verifyIdToken(req.body.idToken);
         const uid = decodedToken.uid;
@@ -28,7 +33,7 @@ router.post('/register', async (req, res) => {
         const userDocRef = db.collection('users').doc(uid);
         await userDocRef.set({
             email: decodedToken.email,
-            isAdmin: false // Standardmässig kein Admin
+            isAdmin: false
         });
 
         res.status(200).json({ success: true });

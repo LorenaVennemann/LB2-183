@@ -21,6 +21,11 @@
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                     </div>
+                    <!-- Honeypot field -->
+                    <div class="mb-3" style="display: none;">
+                        <label for="honeypot" class="form-label">Leave this field empty</label>
+                        <input type="text" class="form-control" id="honeypot" name="honeypot">
+                    </div>
                     <button type="submit" class="btn btn-primary">Register</button>
                     <div id="error-message" class="text-danger mt-2"></div>
                 </form>
