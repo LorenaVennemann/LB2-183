@@ -8,7 +8,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
-const helmet = require('helmet');
 
 // Initialize Firebase Admin
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
@@ -53,34 +52,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-
-// Helmet middleware for security headers
-app.use(helmet());
-
-// Configure CSP
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-            "'self'", 
-            "https://www.gstatic.com", 
-            "https://cdnjs.cloudflare.com", 
-            "https://cdn.jsdelivr.net",
-            "https://www.google.com",
-            "https://www.google-analytics.com",
-            "https://www.googletagmanager.com",
-            "https://www.recaptcha.net",
-            "'unsafe-inline'"
-        ],
-        styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https://www.google.com", "https://www.gstatic.com"],
-        connectSrc: ["'self'", "https://www.googleapis.com", "https://securetoken.googleapis.com", "https://identitytoolkit.googleapis.com"],
-        fontSrc: ["'self'", "https://cdn.jsdelivr.net", "data:"],
-        frameSrc: ["'self'", "https://www.google.com", "https://www.recaptcha.net"],
-        frameAncestors: ["'none'"],
-        formAction: ["'self'"]
-    }
-}));
 
 // Token verification middleware
 app.use(async (req, res, next) => {
