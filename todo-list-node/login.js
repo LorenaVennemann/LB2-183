@@ -30,10 +30,6 @@ router.get('/', (req, res) => {
 
 // Login mit E-Mail & Passwort
 router.post('/', async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ error: 'E-Mail und Passwort erforderlich' });
-    }
     let msg = '';
     let user = { username: '', userid: 0 };
 
