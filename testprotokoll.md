@@ -11,6 +11,7 @@ Tester: Daniels, Kohler, Vennemann
 | AUTH-01 | Login mit korrekten Angabenen | 1. Zur Login-Seite navigieren<br>2. Gültige Credentials eingeben<br>3. Login klicken | Weiterleitung zur Todo-Liste | ... |
 | AUTH-02 | Login mit falschen Angaben | 1. Zur Login-Seite navigieren<br>2. Ungültige Credentials eingeben<br>3. Login klicken | Fehlermeldung wird angezeigt | ... |
 | AUTH-03 | Logout Test | 1. Eingeloggt sein<br>2. Logout klicken | Weiterleitung zur Login-Seite | ... |
+| AUTH-04 | Sign-up | 1. Login-Seite navigieren<br>2. Sign-up klicken | Weiterleitung zur Login-Seite | ... |
 
 
 ### ToDo-Listen Tests 📝
