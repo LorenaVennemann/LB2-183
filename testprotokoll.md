@@ -8,22 +8,22 @@ Tester: Daniels, Kohler, Vennemann
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| AUTH-01 | Registrieren  | keine | 1. Startseite öffnen<br>2. Auf sign up klicken<br>3. Mit der Authenticater App auf dem Smartphone den QR-Code scannen<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ... |
-| AUTH-02 | Mit Google anmelden | keine | 1. Startseite öffnen<br>2. Auf "Continue with Google" klicken | Weiterleitung zur Todo-Liste | ... |
-| AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ... |
-| AUTH-04 | Anmelden mit falschen Angaben | keine | 1. Startseite öffnen<br>2. Ungültige Credentials eingeben<br>3. Continue klicken | Fehlermeldung wird angezeigt | ... |
-| AUTH-05 | Abmelden | -Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ... |
+| AUTH-01 | Registrieren  | keine | 1. Startseite öffnen<br>2. Auf sign up klicken<br>3. Mit der Authenticater App auf dem Smartphone den QR-Code scannen<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-02 | Mit Google anmelden | keine | 1. Startseite öffnen<br>2. Auf "Continue with Google" klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-04 | Anmelden mit falschen Angaben | keine | 1. Startseite öffnen<br>2. Ungültige Credentials eingeben<br>3. Continue klicken | Fehlermeldung wird angezeigt | ✅ |
+| AUTH-05 | Abmelden | -Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ✅ |
 
 
 ### ToDo-Listen Tests 📝
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| ToDo-01 | ToDo erstellen | keine | 1. Eingeloggt sein<br>2. Zur ToDo Seite gehen<br>3. ToDo erstellen | Weiterleitung zur Todo-Liste | ... |
-| ToDo-02 | ToDo bearbeiten | keine | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ... |
-| ToDo-03 | ToDo löschen | keine | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ... |
-| ToDo-04 | ToDo Task Status ändern | keine | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ... |
-| ToDo-05 | Suche nach Task | keine | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ... |
+| ToDo-01 | ToDo erstellen | keine | 1. Eingeloggt sein<br>2. Zur ToDo Seite gehen<br>3. ToDo erstellen | Weiterleitung zur Todo-Liste | ✅ |
+| ToDo-02 | ToDo bearbeiten | keine | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ✅ |
+| ToDo-03 | ToDo löschen | keine | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
+| ToDo-04 | ToDo Task Status ändern | keine | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ✅ |
+| ToDo-05 | Suche nach Task | keine | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ✅ |
 
 
 
@@ -31,6 +31,6 @@ Tester: Daniels, Kohler, Vennemann
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| SEC-01 | Zugriff ohne Login | keine | 1. Browser öffnen<br>2. Direkt zur Todo-URL | Redirect zum Login | ... |
-| SEC-02 | XSS Prevention | keine | 1. Todo mit Script-Tag erstellen<br>`<script>alert('xss')</script>` | Script wird escaped angezeigt | ... |
-| SEC-03 | CSRF Protection | keine | 1. POST Request ohne CSRF Token | Request wird abgelehnt | ... |
+| SEC-01 | Zugriff ohne Login | keine | 1. Browser öffnen<br>2. Direkt zur Todo-URL | Redirect zum Login | ✅ |
+| SEC-02 | XSS Prevention | keine | 1. Todo mit Script-Tag erstellen<br>`<script>alert('xss')</script>` | Script wird escaped angezeigt | ✅ |
+| SEC-03 | CSRF Protection | keine | 1. POST Request ohne CSRF Token | Request wird abgelehnt | ✅ |
