@@ -10,7 +10,7 @@ Tester: Daniels, Kohler, Vennemann
 |---------|--------------|-----------------|----------|---------------------|--------|
 | AUTH-01 | Registrieren  | keine | 1. Startseite öffnen<br>2. Auf sign up klicken<br>3. Mit der Authenticater App auf dem Smartphone den QR-Code scannen<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben| Weiterleitung zur Todo-Liste | ... |
 | AUTH-02 | Mit Google anmelden | keine | 1. Startseite öffnen<br>2. Auf "Continue with Google" klicken | Weiterleitung zur Todo-Liste | ... |
-| AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Onetime Code aus der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ... |
+| AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ... |
 | AUTH-04 | Anmelden mit falschen Angaben | keine | 1. Startseite öffnen<br>2. Ungültige Credentials eingeben<br>3. Continue klicken | Fehlermeldung wird angezeigt | ... |
 | AUTH-05 | Abmelden | -Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ... |
 
