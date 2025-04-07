@@ -19,11 +19,11 @@ Tester: Daniels, Kohler, Vennemann
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| ToDo-01 | Task erstellen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
-| ToDo-02 | Task bearbeiten | - Eingeloggt sein | 1. Bestehende Task wählen<br>2. Auf edit klicken<br>3. Die Description zu "Clean my room" ändern<br>4. Speichern | Die angepasste beschreibung wird in der Task Liste angezeit | ✅ |
-| ToDo-03 | Task löschen | - Eingeloggt sein | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
-| ToDo-04 | ToDo Task Status ändern | - Eingeloggt sein | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ✅ |
-| ToDo-05 | Suche nach Task | - Eingeloggt sein | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ✅ |
+| Task-01 | Task erstellen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
+| Task-02 | Task bearbeiten | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Bestehende Task wählen<br>3. Auf edit klicken<br>4. Die Description zu "Clean my room" ändern<br>5. Speichern | Die angepasste beschreibung wird in der Task Liste angezeit | ✅ |
+| Task-03 | Task löschen | - Eingeloggt sein | 1. Task auswählen<br>2. Task Löschen | Task sollte erfolgreich gelöscht werden und nicht mehr angezeigt werden | ✅ |
+| Task-04 | Task Status ändern | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Status ändern | Die Task sollte mit dem neuen Status in der Task Liste dargestllt werden | ✅ |
+| Task-05 | Suche nach Task | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Im Suchfeld nach dem Task Namen suchen | Die Task sollte erfolgreich angezeigt werden | ✅ |
 
 
 
