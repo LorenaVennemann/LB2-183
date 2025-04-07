@@ -19,9 +19,9 @@ Tester: Daniels, Kohler, Vennemann
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| ToDo-01 | ToDo erstellen | keine | 1. Eingeloggt sein<br>2. Zur ToDo Seite gehen<br>3. ToDo erstellen | Weiterleitung zur Todo-Liste | ✅ |
-| ToDo-02 | ToDo bearbeiten | keine | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ✅ |
-| ToDo-03 | ToDo löschen | keine | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
+| ToDo-01 | Task erstellen | -Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken | Weiterleitung zur Todo-Liste | ✅ |
+| ToDo-02 | Task bearbeiten | keine | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ✅ |
+| ToDo-03 | Task löschen | keine | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
 | ToDo-04 | ToDo Task Status ändern | keine | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ✅ |
 | ToDo-05 | Suche nach Task | keine | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ✅ |
 
