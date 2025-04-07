@@ -4,7 +4,7 @@ Datum: 2/31/2025
 
 Tester: Daniels, Kohler, Vennemann
 
-### Authentifizierung-Tests 🔑
+### Authentifizierung Tests 🔑
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
@@ -12,18 +12,18 @@ Tester: Daniels, Kohler, Vennemann
 | AUTH-02 | Mit Google anmelden | keine | 1. Startseite öffnen<br>2. Auf "Continue with Google" klicken | Weiterleitung zur Todo-Liste | ✅ |
 | AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ✅ |
 | AUTH-04 | Anmelden mit falschen Angaben | keine | 1. Startseite öffnen<br>2. Ungültige Credentials eingeben<br>3. Continue klicken | Fehlermeldung wird angezeigt | ✅ |
-| AUTH-05 | Abmelden | -Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ✅ |
+| AUTH-05 | Abmelden | - Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ✅ |
 
 
-### ToDo-Listen Tests 📝
+### Task Tests 📝
 
 | Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
 |---------|--------------|-----------------|----------|---------------------|--------|
-| ToDo-01 | Task erstellen | -Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
-| ToDo-02 | Task bearbeiten | keine | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ✅ |
-| ToDo-03 | Task löschen | keine | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
-| ToDo-04 | ToDo Task Status ändern | keine | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ✅ |
-| ToDo-05 | Suche nach Task | keine | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ✅ |
+| ToDo-01 | Task erstellen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
+| ToDo-02 | Task bearbeiten | - Eingeloggt sein | 1. Bestehende Task wählen<br>2. Auf edit klicken<br>3. Die Description zu "Clean my room" ändern<br>4. Speichern | Die angepasste beschreibung wird in der Task Liste angezeit | ✅ |
+| ToDo-03 | Task löschen | - Eingeloggt sein | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ✅ |
+| ToDo-04 | ToDo Task Status ändern | - Eingeloggt sein | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ✅ |
+| ToDo-05 | Suche nach Task | - Eingeloggt sein | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ✅ |
 
 
 
