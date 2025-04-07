@@ -21,9 +21,9 @@ Tester: Daniels, Kohler, Vennemann
 |---------|--------------|-----------------|----------|---------------------|--------|
 | Task-01 | Task erstellen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
 | Task-02 | Task bearbeiten | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Bestehende Task wählen<br>3. Auf edit klicken<br>4. Die Description zu "Clean my room" ändern<br>5. Auf Submit klicken | Die angepasste beschreibung wird in der Task Liste angezeit | ✅ |
-| Task-03 | Task löschen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Auf delete klicken<br> | Task sollte erfolgreich gelöscht werden und nicht mehr angezeigt werden | ✅ |
-| Task-04 | Task Status ändern | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Status ändern | Die Task sollte mit dem neuen Status in der Task Liste dargestllt werden | ✅ |
-| Task-05 | Suche nach Task | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Im Suchfeld nach dem Task Namen suchen | Die Task sollte erfolgreich angezeigt werden | ✅ |
+| Task-03 | Task löschen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Auf delete klicken | Task sollte erfolgreich gelöscht werden und nicht mehr angezeigt werden | ✅ |
+| Task-04 | Task Status ändern | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Status ändern<br>4. Auf Submit klicken<br> | Die Task sollte mit dem neuen Status in der Task Liste dargestllt werden | ✅ |
+| Task-05 | Suche nach Task | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Im Suchfeld den Task Namen eingeben<br>3. Auf Submit klicken | Die Task sollte erfolgreich angezeigt werden | ✅ |
 
 
 
