@@ -4,31 +4,33 @@ Datum: 2/31/2025
 
 Tester: Daniels, Kohler, Vennemann
 
-### Authentifizierung-Tests 🔑
+### Authentifizierung Tests 🔑
 
-| Test-ID | Beschreibung | Schritte | Erwartetes Ergebnis | Status |
-|---------|--------------|----------|---------------------|---------|
-| AUTH-01 | Login mit korrekten Angabenen | 1. Zur Login-Seite navigieren<br>2. Gültige Credentials eingeben<br>3. Login klicken | Weiterleitung zur Todo-Liste | ... |
-| AUTH-02 | Login mit falschen Angaben | 1. Zur Login-Seite navigieren<br>2. Ungültige Credentials eingeben<br>3. Login klicken | Fehlermeldung wird angezeigt | ... |
-| AUTH-03 | Logout Test | 1. Eingeloggt sein<br>2. Logout klicken | Weiterleitung zur Login-Seite | ... |
+| Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
+|---------|--------------|-----------------|----------|---------------------|--------|
+| AUTH-01 | Registrieren  | keine | 1. Startseite öffnen<br>2. Auf sign up klicken<br>3. Mit der Authenticater App auf dem Smartphone den QR-Code scannen<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-02 | Mit Google anmelden | keine | 1. Startseite öffnen<br>2. Auf "Continue with Google" klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-03 | Anmelden mit korrekten Angabenen | keine | 1. Startseite öffnen<br>2. Gültige Credentials eingeben<br>3. Continue klicken<br>4. Den einmaligen Passwort Code von der Authenticater app eingeben<br>5. Continue klicken | Weiterleitung zur Todo-Liste | ✅ |
+| AUTH-04 | Anmelden mit falschen Angaben | keine | 1. Startseite öffnen<br>2. Ungültige Credentials eingeben<br>3. Continue klicken | Fehlermeldung wird angezeigt | ✅ |
+| AUTH-05 | Abmelden | - Eingeloggt sein | 1. Logout klicken | Weiterleitung zur Login-Seite | ✅ |
 
 
-### ToDo-Listen Tests 📝
+### Task Tests 📝
 
-| Test-ID | Beschreibung | Schritte | Erwartetes Ergebnis | Status |
-|---------|--------------|----------|---------------------|---------|
-| ToDo-01 | ToDo erstellen | 1. Eingeloggt sein<br>2. Zur ToDo Seite gehen<br>3. ToDo erstellen | Weiterleitung zur Todo-Liste | ... |
-| ToDo-02 | ToDo bearbeiten | 1. Bestehendes ToDo wählen<br>2. Bearbeiten klicken<br>3. Text ändern<br>4. Speichern | Änderungen werden gespeichert | ... |
-| ToDo-03 | ToDo löschen | 1. ToDo auswählen<br>2. ToDo Löschen | ToDo sollte erfolgreich gelöscht werden | ... |
-| ToDo-04 | ToDo Task Status ändern | 1. ToDo auswählen<br>2. Status ändern | ToDo sollte erfolgreich den neuen Status besitzen | ... |
-| ToDo-05 | Suche nach Task | 1. ToDo Seite gehen<br>2. IM Suchfeld nach dem Task Namen suchen | Task sollte erfolgreich den angezeigt werden | ... |
+| Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
+|---------|--------------|-----------------|----------|---------------------|--------|
+| Task-01 | Task erstellen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. auf Create Task klicken<br>3. Beschreibung und Status im Formular ausfüllen<br>4. Auf Submit klicken<br>5. Zurück zur Task Seite navigieren | Die erstellte Task wird auf der Task Seite aufgelistet | ✅ |
+| Task-02 | Task bearbeiten | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Bestehende Task wählen<br>3. Auf edit klicken<br>4. Die Description zu "Clean my room" ändern<br>5. Auf Submit klicken | Die angepasste beschreibung wird in der Task Liste angezeit | ✅ |
+| Task-03 | Task löschen | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Auf delete klicken | Task sollte erfolgreich gelöscht werden und nicht mehr angezeigt werden | ✅ |
+| Task-04 | Task Status ändern | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Task auswählen<br>3. Status ändern<br>4. Auf Submit klicken<br> | Die Task sollte mit dem neuen Status in der Task Liste dargestllt werden | ✅ |
+| Task-05 | Suche nach Task | - Eingeloggt sein | 1. Task Seite öffnen<br>2. Im Suchfeld den Task Namen eingeben<br>3. Auf Submit klicken | Die Task sollte erfolgreich angezeigt werden | ✅ |
 
 
 
 ### Sicherheitstests 🛡️
 
-| Test-ID | Beschreibung | Schritte | Erwartetes Ergebnis | Status |
-|---------|--------------|----------|---------------------|---------|
-| SEC-01 | Zugriff ohne Login | 1. Browser öffnen<br>2. Direkt zur Todo-URL | Redirect zum Login | ... |
-| SEC-02 | XSS Prevention | 1. Todo mit Script-Tag erstellen<br>`<script>alert('xss')</script>` | Script wird escaped angezeigt | ... |
-| SEC-03 | CSRF Protection | 1. POST Request ohne CSRF Token | Request wird abgelehnt | ... |
+| Test-ID | Beschreibung | Voraussetzungen | Schritte | Erwartetes Ergebnis | Status |
+|---------|--------------|-----------------|----------|---------------------|--------|
+| SEC-01 | Zugriff ohne Login | keine | 1. Browser öffnen<br>2. Direkt zur Todo-URL | Redirect zum Login | ✅ |
+| SEC-02 | XSS Prevention | keine | 1. Todo mit Script-Tag erstellen<br>`<script>alert('xss')</script>` | Script wird escaped angezeigt | ✅ |
+| SEC-03 | CSRF Protection | keine | 1. POST Request ohne CSRF Token | Request wird abgelehnt | ✅ |
