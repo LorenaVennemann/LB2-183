@@ -68,3 +68,63 @@ Suche und UserId wird geloggt (Datenschutz ?)
 Wenn es den Task nicht gibt, bekomme ich einfach kein Resultat = Endlos Search?
 
 ![image.png](images/image%208.png)
+
+### 11
+
+Passwort-Regeln beim Registrieren (Mindestlänge, Komplexität)
+
+```
+Your password must contain:
+    At least 8 characters
+    At least 3 of the following:
+        Lower case letters (a-z)
+        Upper case letters (A-Z)
+        Numbers (0-9)
+        Special characters (e.g. !@#$%^&*)
+```
+
+Sind gut und das Login mit einem Google Account via MFA funktioniert
+
+### 12
+
+Cookie-Sicherheit (HttpOnly, Secure, SameSite Flags)
+
+- Secure:true
+- SameSite:"None"
+- HostOnly:true
+- HttpOnly:true
+
+Sieht gut aus.
+
+### 13
+
+In den Cookies werden Username und UserId gespeichert - bisschen heikel.
+
+### 14
+
+`search.js`
+
+Es ist möglich das ein Benutzer Tasks von einem anderen Benutzer anzeigen kann, da die UserId nicht validiert wird aus der Abfrage (Code verlässt sich darauf, dass Client-Side die richtige Id schickt)
+
+### 15
+
+`index.js search/v2 Zeile 11`
+
+SQL-Injection
+
+### 15 
+
+Rate-Limiting nicht vorhanden
+
+### 16
+
+Cross-Site Request Forgery (CSRF) in backgroundsearch.js
+
+### 17
+
+Web Application Firewall funktioniert, ansonsten gäbe es Probleme:
+- Fehlende Input Validation (An mehreren Stellen im Code)
+- XSS in tasklist.js und edit.js
+- Noch einige mehr (einige davon sind in den vorherigen Punkten beschrieben)
+
+Ohne diese WAF wäre die Applikation relativ unsicher, mit der WAF werden viele Probleme behoben und das obwohl es nur 2 Zeilen Code sind für diese WAF.
