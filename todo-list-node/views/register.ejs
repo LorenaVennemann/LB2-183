@@ -21,6 +21,14 @@
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                     </div>
+
+                    <!-- Password Strength -->
+                     <div style="display: none;" id="password-strength-div">
+                        <p>Password Strength</p>
+                        <progress id="password-strength" value="0" max="4"></progress>
+                        <div id="password-strength-text"></div>
+                     </div>
+
                     <!-- Honeypot field -->
                     <div class="mb-3" style="display: none;">
                         <label for="honeypot" class="form-label">Leave this field empty</label>

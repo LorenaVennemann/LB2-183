@@ -1,13 +1,14 @@
 document.getElementById('registerForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const honeypot = document.getElementById('honeypot').value;
     const errorDiv = document.getElementById('error-message');
     const submitButton = document.querySelector('#registerForm button[type="submit"]');
-    
+    const result = zxcvbn(password);
+
     // Simple validation
     if (!email || !password) {
         errorDiv.textContent = 'Please enter email and password';
@@ -19,8 +20,8 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         return;
     }
     
-    if (password.length < 6) {
-        errorDiv.textContent = 'Password must be at least 6 characters';
+    if (password.length < 12) {
+        errorDiv.textContent = 'Password must be at least 12 characters';
         return;
     }
 
@@ -34,7 +35,12 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         errorDiv.textContent = 'Bot detected';
         return;
     }
-    
+
+    if (result.score < 3) {
+        errorDiv.textContent = 'Please choose a stronger password';
+        return;
+    }
+
     try {
         // Disable submit button to prevent multiple submissions
         submitButton.disabled = true;
@@ -72,5 +78,36 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     } finally {
         // Re-enable submit button
         submitButton.disabled = false;
+    }
+});
+
+document.getElementById('password').addEventListener('input', (event) => {
+    console.log(event.target.value);
+    const passwordStrengthDiv = document.getElementById('password-strength-div');
+
+    if(event.target.value) {
+        passwordStrengthDiv.style.display = 'block';
+
+        const result = zxcvbn(event.target.value);
+        const strengthMeter = document.getElementById('password-strength');
+        const strengthText = document.getElementById('password-strength-text');
+
+        // Set progress bar value (0 - 4)
+        strengthMeter.value = result.score;
+
+        // Feedback text and color
+        const feedback = [
+            { text: 'Sehr schwach', color: 'red' },
+            { text: 'Schwach', color: 'orangered' },
+            { text: 'Okay', color: 'orange' },
+            { text: 'Gut', color: 'yellowgreen' },
+            { text: 'Stark', color: 'green' }
+        ];
+
+        strengthText.textContent = feedback[result.score].text;
+        strengthText.style.color = feedback[result.score].color;
+        strengthMeter.style.accentColor = feedback[result.score].color;       
+    } else {
+        passwordStrengthDiv.style.display = 'none';
     }
 });
