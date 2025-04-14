@@ -23,6 +23,12 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         errorDiv.textContent = 'Password must be at least 6 characters';
         return;
     }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%()*+,\-./:;=?@[\]^_{|}~]).+$/;
+    if (!passwordRegex.test(password)) {
+        errorDiv.textContent = 'Password must include uppercase, lowercase, number, and special character (!#$%()*+,-./:;=?@[]^_{|}~)';
+        return;
+    }
     
     if (honeypot) {
         errorDiv.textContent = 'Bot detected';
