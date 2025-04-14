@@ -36,11 +36,9 @@
 | SEC-02 | XSS Prevention | Keine | 1. Todo mit Script-Tag erstellen<br>`<script>alert('xss')</script>` | Script wird escaped angezeigt | ✅ |
 | SEC-03 | CSRF Protection | Keine | 1. POST Request ohne CSRF Token | Request wird abgelehnt durch die Firewall | ✅ |
 | SEC-04 | SQL Injection | Keine | 1. Zur Task Seite navigieren<br>2. Auf Create Task klicken<br>3. Beschreibung: `; SELECT * FROM tasks;` | Request wird abgelehnt durch die Firewall | ✅ |
-| SEC-05 | Session Timeout | Eingeloggt | 1. Einloggen<br>2. Browser 30 Min. inaktiv lassen<br>3. Aktion versuchen | Session ist abgelaufen, Weiterleitung zum Login | ⬜ |
-| SEC-06 | Zugriff auf fremde Ressourcen | Zwei User-Accounts | 1. Mit User A Task erstellen<br>2. Mit User B Task von A via URL aufrufen | Zugriff wird verweigert (403) | ⬜ |
-| SEC-07 | HTML Injection | Eingeloggt | 1. Task mit HTML beschreiben: `<h1>Hack</h1>` | HTML wird escaped angezeigt | ⬜ |
-| SEC-08 | Rate Limiting (Login) | Keine | 1. 10x falsches Passwort eingeben<br>2. Auf Login klicken | Temporäre Sperre oder Captcha erscheint | ⬜ |
-| SEC-09 | Zugriff auf Admin-Funktionen | Eingeloggt (User) | 1. Admin-URL direkt aufrufen | Zugriff wird verweigert (403) | ⬜ |
-| SEC-10 | Passwort in Klartext im Netzwerk | Keine | 1. Anmeldung über HTTP, mit Network-Inspector prüfen | Passwort ist nicht im Klartext sichtbar (HTTPS enforced) | ⬜ |
-| SEC-11 | JWT Manipulation | Eingeloggt (mit JWT) | 1. JWT manipulieren (z. B. Rolle ändern)<br>2. Seite neu laden | Manipulierter Token wird abgewiesen | ⬜ |
-| SEC-12 | Directory Traversal | Keine | 1. URL manipulieren: `/../../etc/passwd` | Zugriff wird blockiert / Fehlerseite erscheint | ✅ (Der Request wird einfach auf / weitergeleitet) |
+| SEC-05 | Zugriff auf fremde Ressourcen | Zwei User-Accounts | 1. Mit User A Task erstellen<br>2. Mit User B Task von A aufrufen mithilfe der UserId | Zugriff wird verweigert | ❌ |
+| SEC-06 | HTML Injection | Eingeloggt | 1. Task mit HTML beschreiben: `<h1>Hack</h1>` | HTML wird escaped angezeigt | ✅ (Request wird von der Firewall abgelehnt) |
+| SEC-07 | Rate Limiting (Login) | Keine | 1. 10x falsches Passwort eingeben<br>2. Auf Login klicken | Temporäre Sperre oder Captcha erscheint | ✅ |
+| SEC-08 | Zugriff auf Admin-Funktionen | Eingeloggt (User) | 1. Admin-URL direkt aufrufen | Zugriff wird verweigert | ✅ |
+| SEC-09 | Passwort in Klartext im Netzwerk | Keine | 1. Anmeldung über HTTP, mit Network-Inspector prüfen | Passwort ist nicht im Klartext sichtbar (HTTPS enforced) | ✅ |
+| SEC-10 | Directory Traversal | Keine | 1. URL manipulieren: `/../../etc/passwd` | Zugriff wird blockiert / Fehlerseite erscheint | ✅ (Der Request wird einfach auf / weitergeleitet) |

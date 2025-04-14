@@ -34,14 +34,10 @@ Der Test konzentriert sich auf folgende Kernbereiche der Applikation:
 
 - **Frontend:** React (bzw. verwendet im Projekt)
 - **Backend:** Node.js / Express (sofern verwendet)
-- **Datenbank:** PostgreSQL (oder verwendet)
+- **Datenbank:** MariaDB
 - **Browser:** Google Chrome (Haupttest), Firefox & Edge (Kompatibilität)
 
-## 6. Testdaten 📊
-
-Es werden verschiedene Testaccounts mit unterschiedlichen Berechtigungen verwendet (z. B. Standard-User, Admin). Tasks mit diversen Beschreibungen und Statuswerten werden zur Abdeckung aller Use-Cases angelegt.
-
-## 7. Testkriterien 🎯
+## 6. Testkriterien 🎯
 
 **Ein Test gilt als bestanden, wenn:**
 
@@ -49,13 +45,13 @@ Es werden verschiedene Testaccounts mit unterschiedlichen Berechtigungen verwend
 - Keine sicherheitsrelevanten Schwachstellen nachweisbar sind.
 - Die Anwendung in den definierten Zielbrowsern funktioniert.
 
-## 8. Testdurchführung 👥
+## 7. Testdurchführung 👥
 
 - **Tester:** Daniels, Kohler, Vennemann
 - **Zeitraum:** KW 9–10
 - **Dokumentation:** In einem Testprotokoll im Markdown-Format (siehe separate Datei)
 
-## 9. Abnahmekriterien ✅
+## 8. Abnahmekriterien ✅
 
 Die Applikation gilt als **abgenommen**, wenn:
 
