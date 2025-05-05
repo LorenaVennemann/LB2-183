@@ -31,50 +31,41 @@ const limiter = rateLimit({
     message: 'Zu viele Anfragen von dieser IP, bitte versuchen Sie es später erneut.'
 });
 
-app.use(
+app.use((req, res, next) => {
     helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            "https://cdn.jsdelivr.net",
-            "https://cdnjs.cloudflare.com",
-            "https://www.gstatic.com",
-            "https://www.googleapis.com",
-            "https://www.google.com"
-          ],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            "https://cdn.jsdelivr.net",
-            "https://cdnjs.cloudflare.com",
-            "https://www.gstatic.com",
-            "https://www.googleapis.com",
-            "https://www.google.com",
-            "https://apis.google.com"
-          ],
-          fontSrc: ["'self'", "https://fonts.gstatic.com"],
-          imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
-          connectSrc: [
-            "'self'",
-            "https://www.googleapis.com",
-            "https://identitytoolkit.googleapis.com",
-            "https://www.google.com"
-          ],
-          frameSrc: [
-            "'self'",
-            "https://www.google.com",
-            "https://www.gstatic.com"
-          ],
-          objectSrc: ["'none'"],
-          upgradeInsecureRequests: []
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://cdn.jsdelivr.net",
+                    "https://cdnjs.cloudflare.com",
+                    "https://www.gstatic.com",
+                    "https://www.googleapis.com",
+                    "https://www.google.com",
+                    "https://apis.google.com"
+                ],
+                fontSrc: ["'self'", "https://fonts.gstatic.com"],
+                imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
+                connectSrc: [
+                    "'self'",
+                    "https://www.googleapis.com",
+                    "https://identitytoolkit.googleapis.com",
+                    "https://www.google.com"
+                ],
+                frameSrc: [
+                    "'self'",
+                    "https://www.google.com",
+                    "https://www.gstatic.com",
+                    "https://login-183.firebaseapp.com" // Add this line
+                ],
+                objectSrc: ["'none'"],
+                upgradeInsecureRequests: []
+            }
         }
-      }
-    })
-  );
-  
+    })(req, res, next);
+});
 
 // Anwenden der Rate Limiting Middleware auf alle Routen
 app.use(limiter);
