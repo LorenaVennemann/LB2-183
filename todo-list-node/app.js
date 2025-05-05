@@ -45,11 +45,15 @@ app.use(
             "https://www.googleapis.com",
             "https://www.google.com"
           ],
-          styleSrc: [
+          scriptSrc: [
             "'self'",
             "'unsafe-inline'",
             "https://cdn.jsdelivr.net",
-            "https://fonts.googleapis.com"
+            "https://cdnjs.cloudflare.com",
+            "https://www.gstatic.com",
+            "https://www.googleapis.com",
+            "https://www.google.com",
+            "https://apis.google.com"
           ],
           fontSrc: ["'self'", "https://fonts.gstatic.com"],
           imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
