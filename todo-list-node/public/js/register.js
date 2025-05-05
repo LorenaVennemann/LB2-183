@@ -82,7 +82,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
 });
 
 document.getElementById('password').addEventListener('input', (event) => {
-    console.log(event.target.value);
     const passwordStrengthDiv = document.getElementById('password-strength-div');
 
     if(event.target.value) {

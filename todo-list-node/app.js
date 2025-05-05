@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -9,6 +10,7 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
 const rateLimit = require('express-rate-limit');
+
 
 // Initialize Firebase Admin
 const serviceAccount = require("./login-183-firebase-adminsdk-fbsvc-6ca3379310.json");
@@ -28,6 +30,47 @@ const limiter = rateLimit({
     max: 60,
     message: 'Zu viele Anfragen von dieser IP, bitte versuchen Sie es später erneut.'
 });
+
+app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "https://cdn.jsdelivr.net",
+            "https://cdnjs.cloudflare.com",
+            "https://www.gstatic.com",
+            "https://www.googleapis.com",
+            "https://www.google.com"
+          ],
+          styleSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "https://cdn.jsdelivr.net",
+            "https://fonts.googleapis.com"
+          ],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
+          connectSrc: [
+            "'self'",
+            "https://www.googleapis.com",
+            "https://identitytoolkit.googleapis.com",
+            "https://www.google.com"
+          ],
+          frameSrc: [
+            "'self'",
+            "https://www.google.com",
+            "https://www.gstatic.com"
+          ],
+          objectSrc: ["'none'"],
+          upgradeInsecureRequests: []
+        }
+      }
+    })
+  );
+  
 
 // Anwenden der Rate Limiting Middleware auf alle Routen
 app.use(limiter);
