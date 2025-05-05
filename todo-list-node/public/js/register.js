@@ -45,7 +45,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         // Disable submit button to prevent multiple submissions
         submitButton.disabled = true;
         
-        // Create user with Firebase Auth
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
         
