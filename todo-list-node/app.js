@@ -31,6 +31,7 @@ const limiter = rateLimit({
     message: 'Zu viele Anfragen von dieser IP, bitte versuchen Sie es später erneut.'
 });
 
+/*
 app.use((req, res, next) => {
     helmet({
         contentSecurityPolicy: {
@@ -50,15 +51,17 @@ app.use((req, res, next) => {
                 imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
                 connectSrc: [
                     "'self'",
+                    "'unsafe-inline'",
                     "https://www.googleapis.com",
                     "https://identitytoolkit.googleapis.com",
                     "https://www.google.com"
                 ],
                 frameSrc: [
                     "'self'",
+                    "'unsafe-inline'",
                     "https://www.google.com",
                     "https://www.gstatic.com",
-                    "https://login-183.firebaseapp.com" // Add this line
+                    "https://login-183.firebaseapp.com"
                 ],
                 objectSrc: ["'none'"],
                 upgradeInsecureRequests: []
@@ -66,6 +69,7 @@ app.use((req, res, next) => {
         }
     })(req, res, next);
 });
+*/
 
 // Anwenden der Rate Limiting Middleware auf alle Routen
 app.use(limiter);

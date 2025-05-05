@@ -35,3 +35,21 @@ Wie schon bei Testfall 7.2 beschriben funktioniert der SMS-Versand, sowie der ga
 2
 
 Die Firebase Konfig so wie sie ist passt, die Konfig wird verwendet und so benutzt, es scheint vielleicht nicht so sinvoll die Konfiguration doppelt zu haben, aber es funktioniert so.
+
+## ZAP Report Feedback
+
+### 1 - 5
+
+Diese Probleme konnten mit Helmet behoben werden, das Problem ist nur, dass dann das Login mit dem Google Konto nicht mehr funktionierte, obwohl die Sachen eigentlich richtig konfiguriert sein sollten im CSP. Deshalb ist der Teil mit dem Helmet auskommentiert, weil in diesem Fall geht usability über security.
+
+### 6. Authentication Request Identified
+
+Sollte kein Problem darstellen.
+
+### 7. Information Disclosure - Sensitive Information in URL
+
+Ist sicher nicht gut wennn sensitive Daten in der URL stehen, leider reichte die Zeit nicht mehr um sich genauer mit diesem Problem zu beschäftigen.
+
+### 8. Information Disclosure - Suspicious Comments
+
+Kommentar wurde entfernt.
